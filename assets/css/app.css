@@ -1,0 +1,16 @@
+#__nuxt,#__layout {
+    width: 100%;
+    height: 100%;
+}
+body, html {
+  min-width: 1200px;
+  font-size: 16px !important;
+}
+
+@font-face {
+  font-family: hotFont;
+  src: url('../font/FZYHJW.woff');
+}
+span, p  {
+  font-family: 'hotFont' !important;
+}
