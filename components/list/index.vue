@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 2px solid hsla(0,0%,59.2%,.1);">
+  <div>
       <header class="Type">
           <nav class="Type-nav">
                 <ul>

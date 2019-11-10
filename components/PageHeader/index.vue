@@ -1,52 +1,86 @@
 <template>
-    <div class="FixWrap">
-        <div class="PageTitle" >
-            <a class='logo-title' href="http://www.yjdzm.com">
-                <h1>
-                    遥近
-                </h1>
-                <span>做不一样的博客平台</span>
-            </a>
-        </div>
-        <div class="Nav_tab">
-            <PageMenu/> 
-        </div>
-        <div class="Search">
-            <Input v-model="searchValue" icon="md-search" placeholder="搜索文章" style="width: 200px" />
-        </div>
-        <!-- <nuxt-link to="/login" class="LoginBtn">登录</nuxt-link> -->
-        <div class="User">
-            <div class="UserHeader" @click.stop="handleList">
-                <img src="../../assets/img/myhead.jpg" alt="">
+        <div class="FixWrap">
+            <div class="ContentWrap container">
+                <div class="PageTitle" >
+                    <a class='logo-title' href="http://www.yjdzm.com">
+                        <h1>
+                            遥近
+                        </h1>
+                        <span>做不一样的博客平台</span>
+                    </a>
+                </div>
+                <div class="Content">
+                    <PageMenu/>
+                    <div class="actionWrap">
+                        <div class="Search">
+                            <Input v-model="searchValue" icon="md-search" placeholder="搜索文章" style="width: 200px" />
+                        </div>
+                        <!-- <nuxt-link to="/login" class="LoginBtn">登录</nuxt-link> -->
+                        <div class="User">
+                            <div class="UserHeader" @click.stop="handleList">
+                                <img src="../../assets/img/myhead.jpg" alt="">
+                            </div>
+                            <DropList :source='userDropData' :splitLine='true' :size="14" v-if="showList" class="Special"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <ul class="UserList" v-if="showList">
-                <div class="ListWrap">
-                    <li class="ListItem">写文章</li>
-                </div>
-                <div class="ListWrap">
-                    <li class="ListItem">我的主页</li>
-                    <li class="ListItem">我赞过的</li>
-                </div>
-                <div class="ListWrap">
-                    <li class="ListItem">设置</li>
-                    <li class="ListItem">退出</li>
-                </div>
-            </ul>
         </div>
-    </div>
 </template>
 
 <script>
 import PageMenu from '../PageMenu/index'
+import DropList from '../../components/dropList/index'
 export default {
     data () {
         return {
             searchValue: '',
             showList: false,
+            userDropData: [
+                 {
+                    path: '/write',
+                    icon: "ios-brush",
+                    name: '写文章',
+                    id: 'article',
+                },
+                {
+                    path: '/draft',
+                    icon: "ios-paper",
+                    name: '草稿',
+                    id: 'ios-paper',
+                    line: true,
+                },
+                  {
+                    path: '/myHome',
+                    icon: "md-person",
+                    name: '我的主页',
+                    id: 'article',
+                },
+                {
+                    path: '/myPraise',
+                    icon: "md-thumbs-up",
+                    name: '我赞过的',
+                    id: 'article',
+                    line: true,
+                },
+                 {
+                    path: '/setting',
+                    icon: "ios-settings",
+                    name: '设置',
+                    id: 'setting',
+                },
+                {
+                    path: '/login',
+                    icon: "md-walk",
+                    name: '登出',
+                    id: 'login',
+                }
+            ],
         }
     },
     components: {
         PageMenu,
+        DropList
     },
     methods: {
         handleList () {
@@ -61,41 +95,37 @@ export default {
 
 <style lang="less" scoped>
 .FixWrap {
-        min-width: 1200px;
-        z-index: 99999;
-        width: 100%;
-        height: 64px;
-        background-color: #fff;
-        line-height: 64px;
-        padding: 0 40px;
+    z-index: 99999;
+    height: 64px;
+    background-color: #fff;
+    left:0;
+    top: 0;
+    right: 0;
+    position: fixed;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+    .ContentWrap {
         display: flex;
-        justify-content: center;
-        align-items: center; 
-        left:0;
-         width: 100%;
-         position: fixed;
-        box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
-        .PageTitle, .Nav_tab {
-            float: left;
-        }
+        -webkit-box-align: center;
+        align-items: center;
+        height: 100%;
+        max-width: 1200px;
+        padding: 0 20px;
         .PageTitle {
-            float: left;
+            height: 100%;
             .logo {
-                float: left;
-               height: 64px;
-               padding-right: 10px;
+                height: 64px;
+                padding-right: 10px;
                 img {
                     height: 100%;
                 }
             }
             .logo-title {
                 height: 64px;
-                float: left;
                 text-align: center;
                 color: black;
-                line-height: normal;;
+                line-height: normal;
                 h1 {
-                    margin: 4px 0px 5px 0px;
+                    margin: 4px 0 5px 0;
                     font-size: 22px;
                 }
                 span {
@@ -104,93 +134,91 @@ export default {
                 }
             }
         }
-        .Nav_tab {
-            margin-left: 100px;
-        }
-
-        .Search {
-            float: left;
-            margin-left: 20px;
-            .ivu-input-wrapper {
-                /deep/.ivu-input {
-                    height: 40px;
-                    line-height: 40px;
-                    font-family: 'hotFont';
-                    font-size: 14px;
-                    color: black;
-                    border: 1.5px solid #e2e6ea;
-                    &:focus {
-                        border-color: #e2e6ea;
-                        box-shadow: 0 0 0 2px #e2e6ea;
-                    }
-                    &:hover {
-                        border-color: #e2e6ea;
-                    }
-                }
-                /deep/.ivu-icon {
-                    height: 40px;
-                    width: 40px;
-                    line-height: 40px;
-                    font-size: 20px;
-                    cursor: pointer;
-                }
-            } 
-        }
-        .LoginBtn {
-            display: block;
-            margin-left: 20px;
-            height: 40px;
-            width: 80px;
-            // margin-top: 13px;
-            line-height: 40px;
-            text-align: center;
-            border: 1.5px solid #e2e6ea;
-            border-radius: 20px;
-            color: rgba(0,0,0,.65);
-            font-family: 'hotFont';
-            &:hover {
-                background-color: #e2e6ea;
-            }
-        }
-        .User {
-            cursor: pointer;
-            float: left;
-            .UserHeader {
-                margin-left: 20px;
-                width: 40px;
-                height: 40px;
-                img {
-                    border-radius: 50%;
+        .Content {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex: auto;
+            justify-content: space-evenly;
+            .actionWrap {
+                display: flex;
+                justify-content: center;
+                align-self: center;
+                height: 100%;
+                .Search {
                     height: 100%;
-                    width: 100%;
-                }
-            }
-            .UserList {
-                left: auto;
-                text-align: center;
-                width: 100px;
-                font-size: 12px;
-                font-family: 'hotFont';
-                border-radius: 4px;
-                box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
-                border: 1px solid rgba(177,180,185,.45);
-                background-color: #fff;
-                list-style: none;
-                position:absolute;
-                top: 100%;
-                .ListWrap {
-                    
-                    border-bottom: 1px solid rgba(0,0,0,.04);
-                    padding: 8px 0;
-                    .ListItem {
-                        line-height: 35px;
-                        height: 35px;
-                        &:hover {
-                           background-color: hsla(0,0%,94.9%,.5);
+                    flex: 0.5;
+                    justify-content: flex-end;
+                    cursor: auto;
+                    display: flex;
+                    align-items: center;
+                    .ivu-input-wrapper {
+                        /deep/ .ivu-input {
+                            height: 40px;
+                            line-height: 40px;
+                            font-family: 'hotFont';
+                            font-size: 14px;
+                            color: black;
+                            border: 1.5px solid #e2e6ea;
+
+                            &:focus {
+                                border-color: #e2e6ea;
+                                box-shadow: 0 0 0 2px #e2e6ea;
+                            }
+
+                            &:hover {
+                                border-color: #e2e6ea;
+                            }
                         }
+
+                        /deep/ .ivu-icon {
+                            height: 40px;
+                            width: 40px;
+                            line-height: 40px;
+                            font-size: 20px;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .LoginBtn {
+                    display: block;
+                    margin-left: 20px;
+                    height: 40px;
+                    width: 80px;
+                    line-height: 40px;
+                    text-align: center;
+                    border: 1.5px solid #e2e6ea;
+                    border-radius: 20px;
+                    color: rgba(0, 0, 0, .65);
+                    font-family: 'hotFont';
+                    &:hover {
+                        background-color: #e2e6ea;
+                    }
+                }
+                .User {
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-self: center;
+                    cursor: pointer;
+                    .UserHeader {
+                        margin-left: 20px;
+                        width: 40px;
+                        height: 40px;
+
+                        img {
+                            border-radius: 50%;
+                            height: 100%;
+                            width: 100%;
+                        }
+                    }
+                    .Special {
+                        width: 100px;
                     }
                 }
             }
         }
     }
+}
 </style>

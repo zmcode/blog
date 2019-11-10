@@ -59,15 +59,18 @@
             </div>
           </Col>
     </Row>
+    <Modal></Modal>
   </div>
 </template>
 
 <script>
-import ListItem from '../components/list/listItem'
+import Modal from '../components/myModal/index'
+import ListItem from '../components/list/index'
 export default {
   layout: 'blog',
   components: {
-    ListItem
+    ListItem,
+    Modal
   }
 }
 </script>
@@ -90,6 +93,7 @@ export default {
    .content {
      padding: 30px 20px;
      .ArticleWrap {
+       box-shadow: 0 1px 3px 0 rgba(4,5,13,.23);
        border-radius: 5px;
       //  padding: 5px 0 0 0;
        margin-top: 30px;

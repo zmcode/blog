@@ -1,9 +1,9 @@
 <template>
 <!-- 包裹 -->
-  <div class="Wrap" @click="hideList">
+  <div class="container" @click="hideList">
       <!-- 头部区域 -->
-      <div class="HeaderWrap" style='left: 0'>
-            <PageHeader ref="HeaderChild"/>
+      <div class="HeaderWrap">
+        <PageHeader ref="HeaderChild"/>
       </div>
       <!-- 内容区域 -->
       <div class="contentWrap">
@@ -34,6 +34,7 @@ export default {
     },
     methods: {
         hideList() {
+            if (this.$route.path === '/login') return
             this.$refs.HeaderChild.hiddenList()
         }
     }
@@ -41,28 +42,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    body {
-        font-size: 16px !important;
-    }
-    .Wrap {
-        min-width: 1200px;
-        width: 100%;
-        height: 100%;
+    .HeaderWrap {
         position: relative;
-        .HeaderWrap {
-            position: relative;
-            overflow: hidden;
-            height: 64px; // 固定定位写死高度
-        }
-        .contentWrap {
-            min-width: 1200px;
-            background-color: #f6f7f8;
-            height: 1000px;
-        }
-        .footerWrap {
-            background-color: #f6f7f8;
-            text-align: center;
-            width: 100%;
-        }
+        overflow: hidden;
+        height: 64px; // 固定定位写死高度
+    }
+    .contentWrap {
+        max-width: 1200px;
+        background-color: #f6f7f8;
+        height: 1000px;
+        margin: auto;
+    }
+    .footerWrap {
+        background-color: #f6f7f8;
+        text-align: center;
+        width: 100%;
     }
 </style>
