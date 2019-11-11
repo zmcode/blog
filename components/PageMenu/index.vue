@@ -1,6 +1,6 @@
 <template>
       <ul class="NavWrap">
-          <li  v-for="navItem in NavData" class="NavItem">
+          <li v-for="navItem in NavData" class="NavItem" :key='navItem.id'>
               <nuxt-link
                   :key='navItem.id'
                   :to="navItem.path"
@@ -22,7 +22,7 @@ export default {
         return {
             // 头部数据
             NavData: [
-                { path: '/', icon: 'md-home', name: '首页', id: 'home'},
+                { path: '/', icon: 'md-home', name: '首页', id: 'home' },
                 {
                      path: '/learn',
                      icon: "md-school",
@@ -69,6 +69,7 @@ export default {
                         }
                     ]
                 },
+                { path: '/question', icon: "md-help-circle", name: '提问', id: 'question'},
                 { path: '/ranking', icon: "ios-podium", name: '排行', id: 'ranking'},
             ]
         }
@@ -84,7 +85,6 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
-    flex: 0.7;
     justify-content: start;
     .NavItem {
         position: relative;
@@ -96,7 +96,7 @@ export default {
         &:hover {
             background: #e2e6ea;
             .DropList {
-                opacity: 1;
+                display: block;
             }
         }
         .NavLink {
@@ -115,7 +115,7 @@ export default {
             }
         }
         .DropList {
-            opacity: 0;
+            display: none;
         }
     }
 }

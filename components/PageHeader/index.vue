@@ -15,12 +15,21 @@
                         <div class="Search">
                             <Input v-model="searchValue" icon="md-search" placeholder="搜索文章" style="width: 200px" />
                         </div>
-                        <!-- <nuxt-link to="/login" class="LoginBtn">登录</nuxt-link> -->
+                         <!--<nuxt-link to="/login" class="LoginBtn">登录</nuxt-link>-->
+                        <Badge :count="3" class="message">
+                            <nuxt-link
+                                key='message'
+                                to="/message"
+                                exact
+                            >
+                                <Icon type="md-notifications" size="28"/>
+                            </nuxt-link>
+                        </Badge>
                         <div class="User">
-                            <div class="UserHeader" @click.stop="handleList">
+                            <div class="UserHeader">
                                 <img src="../../assets/img/myhead.jpg" alt="">
                             </div>
-                            <DropList :source='userDropData' :splitLine='true' :size="14" v-if="showList" class="Special"/>
+                            <DropList :source='userDropData' :splitLine='true' :size="14"  class="Special"/>
                         </div>
                     </div>
                 </div>
@@ -143,7 +152,7 @@ export default {
             .actionWrap {
                 display: flex;
                 justify-content: center;
-                align-self: center;
+                align-items: center;
                 height: 100%;
                 .Search {
                     height: 100%;
@@ -200,13 +209,11 @@ export default {
                     position: relative;
                     display: flex;
                     justify-content: center;
-                    align-self: center;
+                    align-items: center;
                     cursor: pointer;
                     .UserHeader {
-                        margin-left: 20px;
                         width: 40px;
                         height: 40px;
-
                         img {
                             border-radius: 50%;
                             height: 100%;
@@ -214,7 +221,20 @@ export default {
                         }
                     }
                     .Special {
+                        display: none;
                         width: 100px;
+                        margin-left: -120%;
+                    }
+                    &:hover {
+                        .Special {
+                            display: block;
+                        }
+                    }
+                }
+                .message {
+                    margin: 0 20px 0 15px;
+                    a {
+                        color: #71777c;
                     }
                 }
             }
