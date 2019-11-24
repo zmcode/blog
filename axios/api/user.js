@@ -21,3 +21,14 @@ export const Register = params => {
         params
     )
 }
+
+// 修改密码接口
+export const Reset = params => {
+    return axiosTool.httpServer(
+        {
+            url: '/reset',
+            method: 'post'
+        },
+        params
+    )
+}

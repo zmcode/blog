@@ -101,8 +101,10 @@
 
 </template>
 <script>
-import  { Login, Register }  from '../../axios/api/user.js'
-import login from '../../store/login';
+import { Register } from  '../../axios/api/user.js'
+import { mapActions } from 'vuex'
+// import login from '../../store/login';
+import md5 from 'md5'
 export default {
   layout: 'login',
   // 数据源
@@ -123,86 +125,87 @@ export default {
 
   // 方法
   methods: {
+    ...mapActions({
+      bindLogin: 'login/handleUserLogin'
+    }),
     // 显示函数
     ShowRegister () {
-        this.WelcomeVisible = false;
-        this.RegisterVisible = true;
-        this.LoginVisible = false;
+        this.WelcomeVisible = false
+        this.RegisterVisible = true
+        this.LoginVisible = false
     },
     ShowLogin () {
-        this.WelcomeVisible = false;
-        this.RegisterVisible = false;
-        this.LoginVisible = true;
+        this.WelcomeVisible = false
+        this.RegisterVisible = false
+        this.LoginVisible = true
     },
     showWelcome () {
-      this.WelcomeVisible = true;
-      this.RegisterVisible = false;
-      this.LoginVisible = false;
-      this.username = '';
-      this.password = '';
-      this.name = '';
+      this.WelcomeVisible = true
+      this.RegisterVisible = false
+      this.LoginVisible = false
+      this.username = ''
+      this.password = ''
+      this.name = ''
     },
-
-
     // 登录
     LoginUser (e) {
       e.preventDefault()
-       Login({
+       this.bindLogin({
            username: this.username,
-           password: this.password,
+           password: md5(this.password),
        })
         .then(res => {
           if (res.code === 200) {
-            let name = res.data.userInfo.name;
-            this.InfImg = require("~/assets/img/login_icon.png");
-            this.InfText = `欢迎回来, ${name}`;
-            this.showInf = true;
-              this.$router.replace("/")
+            let name = res.data.userInfo.name
+            this.InfImg = require('~/assets/img/login_icon.png')
+            this.InfText = `欢迎回来, ${name}`
+            this.showInf = true
+              this.$router.replace('/')
                setTimeout(() => {
-                   this.showInf = false;
-               }, 2000);
+                   this.showInf = false
+               }, 2000)
           } else {
-            this.InfImg = require("~/assets/img/error_icon.png");
-            this.InfText = '账号或者密码错误';
-            this.error = true;
-            this.showInf = true;
+            this.InfImg = require('~/assets/img/error_icon.png')
+            this.InfText = '账号或者密码错误'
+            this.error = true
+            this.showInf = true
             setTimeout(() => {
-              this.showInf = false;
-              this.error = false;
-            }, 2000);
+              this.showInf = false
+              this.error = false
+            }, 2000)
           }
         })
-        .catch(err => {
-          this.$Message.error('网络出现异常')
-        })
+        // .catch(err => {
+        //   this.$Message.error('网络出现异常')
+        // })
     },
 
     // 注册
     RegisterUser (e) {
-       e.preventDefault()
+      e.preventDefault()
       Register({
            username: this.username,
-           password: this.password,
+           password: md5(this.password),
            name: this.name,
        })
        .then(req => {
           if (req.code === 200) {
-              this.InfImg = require("~/assets/img/register_icon.png");
-              this.InfText = '注册成功,去登陆吧';
-              this.showInf = true;
-              this.ShowLogin();
+              this.InfImg = require('~/assets/img/register_icon.png')
+              this.InfText = '注册成功,去登陆吧'
+              this.showInf = true
+              this.ShowLogin()
             setTimeout(() => {
-              this.showInf = false;
-            }, 2000);
+              this.showInf = false
+            }, 2000)
           } else {
-              this.InfImg = require("~/assets/img/error_icon.png");
-              this.InfText = req.msg;
-              this.error = true;
-              this.showInf = true;
+              this.InfImg = require('~/assets/img/error_icon.png')
+              this.InfText = req.msg
+              this.error = true
+              this.showInf = true
           }
        })
        .catch(err => {
-          this.$Message.error('网络出现异常')
+          this.$Message.error('网络出现异常', err)
         })
     }
   }

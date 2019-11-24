@@ -6,9 +6,6 @@
                     <li class="TypeList">
                         <a href="/">最新</a>
                     </li>
-                    <li class="TypeList">
-                        <a href="/">热门</a>    
-                    </li>
                 </ul>
           </nav>
       </header>
@@ -16,7 +13,7 @@
             <ListItem v-for="item in data" :key="item.title" class="ListItem">
                 <ListItemMeta>
                     <template slot="title">
-                        <a href="/">Vuex的使用</a>
+                        <a href="/">首页开发中,尽情期待</a>
                     </template>
                     <template slot="description">
                         <span>{{item.description}}</span>
@@ -25,21 +22,20 @@
 
                 <template slot="action">
                     <li>
-                    <Icon type="md-contact" size='14'/> <span>遥近</span>
+                        <Icon type="md-contact" size='14'/> <span>???</span>
                     </li>
                     <li>
-                        <Icon type="md-thumbs-up" size='14'/> <span>333</span>
+                        <Icon type="md-thumbs-up" size='14'/> <span>???</span>
                     </li>
                     <li>    
-                        <Icon type="ios-chatboxes-outline" /> <span>666</span>
+                        <Icon type="ios-chatboxes-outline" /> <span>????</span>
                     </li>
                     <li>
-                        <Icon type="md-time" size='14'/><span>2019-10-1</span>
+                        <Icon type="md-time" size='14'/><span>?????</span>
                     </li>
                 </template>
                 <template slot="extra">
-                    <!-- <span></span> -->
-                    <img src="https://dev-file.iviewui.com/5wxHCQMUyrauMCGSVEYVxHR5JmvS7DpH/large" style="width: 150px">
+                    <span></span>
                 </template>
             </ListItem>
     </List>
@@ -52,33 +48,29 @@ data () {
             return {
                 data: [
                     {
-                        title: 'vuex的使用',
-                        description: 'vuex是一个集中式的管理状体的工具vuex是一个集中式的管理状体的工具',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
+                        title: '首页开发中,尽情期待1',
+                        description: '?????',
+                        content: '?????,'
+                    },
+                   {
+                        title: '首页开发中,尽情期待2',
+                        description: '?????',
+                        content: '?????,'
                     },
                     {
-                        title: 'This is title 23',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
+                        title: '首页开发中,尽情期待3',
+                        description: '?????',
+                        content: '?????,'
                     },
                     {
-                        title: 'This is title 31',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
+                        title: '首页开发中,尽情期待4',
+                        description: '?????',
+                        content: '?????,'
                     },
-                     {
-                        title: 'This is title 32',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 33',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
+                   {
+                        title: '首页开发中,尽情期待5',
+                        description: '?????',
+                        content: '?????,'
                     },
                 ]
             }

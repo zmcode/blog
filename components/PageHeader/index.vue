@@ -13,10 +13,17 @@
                     <PageMenu/>
                     <div class="actionWrap">
                         <div class="Search">
-                            <Input v-model="searchValue" icon="md-search" placeholder="搜索文章" style="width: 200px" />
+                            <Input 
+                                v-model="searchValue" 
+                                icon="md-search" 
+                                placeholder="搜索文章" 
+                                style="width: 200px"
+                                @on-enter='searchArticle'
+                                @on-click='searchArticle'
+                            />
                         </div>
                          <!--<nuxt-link to="/login" class="LoginBtn">登录</nuxt-link>-->
-                        <Badge :count="3" class="message">
+                        <!-- <Badge :count="3" class="message">
                             <nuxt-link
                                 key='message'
                                 to="/message"
@@ -24,63 +31,81 @@
                             >
                                 <Icon type="md-notifications" size="28"/>
                             </nuxt-link>
-                        </Badge>
+                        </Badge> -->
                         <div class="User">
                             <div class="UserHeader">
-                                <img src="../../assets/img/myhead.jpg" alt="">
+                                 <Avatar icon="ios-person" :src='userInfo.avatar'/>
                             </div>
-                            <DropList :source='userDropData' :splitLine='true' :size="14"  class="Special"/>
+                            <DropList class="Special" @click='showLayoutModal'>
+                                <DropListItem
+                                    :source='userDropData'
+                                    :size="14"
+                                />
+                            </DropList>
                         </div>
                     </div>
                 </div>
             </div>
+            <Modal 
+                :mask='true'
+                title='退出登录'
+                :visible='showModal'
+                @onOk='goLogin'
+                @onCancle='hiddenModal'
+            >
+                <p>博客有你的贡献将会更加强大,确定退出吗?</p>
+            </Modal>
         </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import PageMenu from '../PageMenu/index'
 import DropList from '../../components/dropList/index'
+import DropListItem from '../../components/dropList/dropListItem'
+import Modal from '../myModal/index'
 export default {
     data () {
         return {
             searchValue: '',
-            showList: false,
+            showModal: false,
             userDropData: [
                  {
                     path: '/write',
-                    icon: "ios-brush",
+                    icon: 'ios-brush',
                     name: '写文章',
                     id: 'article',
                 },
                 {
                     path: '/draft',
-                    icon: "ios-paper",
+                    icon: 'ios-paper',
                     name: '草稿',
                     id: 'ios-paper',
                     line: true,
                 },
-                  {
-                    path: '/myHome',
-                    icon: "md-person",
+                {
+                    path: '',
+                    icon: 'md-person',
                     name: '我的主页',
                     id: 'article',
+                    a: true, // path里面写表达式的话,就会报错,不知道为什么,用了a标签防止
                 },
-                {
-                    path: '/myPraise',
-                    icon: "md-thumbs-up",
-                    name: '我赞过的',
-                    id: 'article',
-                    line: true,
-                },
+                // {
+                //     path: '/myPraise',
+                //     icon: "md-thumbs-up",
+                //     name: '我赞过的',
+                //     id: 'article',
+                //     line: true,
+                // },
                  {
-                    path: '/setting',
-                    icon: "ios-settings",
+                    path: '/setting/person',
+                    icon: 'ios-settings',
                     name: '设置',
                     id: 'setting',
                 },
                 {
-                    path: '/login',
-                    icon: "md-walk",
+                    path: '',
+                    icon: 'md-walk',
                     name: '登出',
                     id: 'login',
                 }
@@ -89,22 +114,49 @@ export default {
     },
     components: {
         PageMenu,
-        DropList
+        DropList,
+        Modal,
+        DropListItem
     },
     methods: {
-        handleList () {
-            this.showList = !this.showList
+        showLayoutModal(name) {
+            name = name.replace(/\s*/g,'')
+            if (name === '登出') {
+                this.showModal = true
+            }
+            if(name === '我的主页') {
+                this.$router.replace({
+                    path: `/home/${this.userInfo.id}`
+                })
+            }
         },
-        hiddenList () {
-            this.showList = false
+        goLogin() {
+            this.$store.dispatch('login/handleClearLoginOut').then(() => {
+                this.$router.replace('/login')
+            })
+        },
+        hiddenModal() {
+            this.showModal = false
+        },
+        searchArticle() {
+            if(!this.searchValue) {
+                this.$Message.error('不能搜索空的文本')
+                return
+            }
+            this.$router.push(`/search?q=${this.searchValue}`)
         }
-    }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.login.userInfo
+        })
+    },
 }
 </script>
 
 <style lang="less" scoped>
 .FixWrap {
-    z-index: 99999;
+    z-index: 999;
     height: 64px;
     background-color: #fff;
     left:0;
@@ -161,6 +213,7 @@ export default {
                     cursor: auto;
                     display: flex;
                     align-items: center;
+                    margin-right: 40px;
                     .ivu-input-wrapper {
                         /deep/ .ivu-input {
                             height: 40px;
@@ -212,6 +265,9 @@ export default {
                     align-items: center;
                     cursor: pointer;
                     .UserHeader {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
                         width: 40px;
                         height: 40px;
                         img {
@@ -239,6 +295,35 @@ export default {
                 }
             }
         }
+    }
+}
+</style>
+<style lang="less">
+ .ivu-input-wrapper {
+    /deep/ .ivu-input {
+        height: 40px;
+        line-height: 40px;
+        font-family: 'hotFont';
+        font-size: 14px;
+        color: black;
+        border: 1.5px solid #e2e6ea;
+
+        &:focus {
+            border-color: #e2e6ea;
+            box-shadow: 0 0 0 2px #e2e6ea;
+        }
+
+        &:hover {
+            border-color: #e2e6ea;
+        }
+    }
+
+    /deep/ .ivu-icon {
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        font-size: 20px;
+        cursor: pointer;
     }
 }
 </style>

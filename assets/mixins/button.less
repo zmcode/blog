@@ -1,0 +1,66 @@
+// 控制按钮颜色
+.btnColor(@color; @background; @border) {
+    color: @color;
+    background-color: @background;
+    border-color: @border;
+};
+
+// 控制按钮大小
+.btnSize(@padding; @fontSize; @borderRadius) {
+    padding: @padding;
+    font-size: @fontSize;
+    border-radius: @borderRadius;
+};
+
+// 根据类型不同显示不同
+.controlBtn(@color) {   
+    .btnColor(@btn-color; @color; @color);
+    &:hover {
+        .btnColor(tint(@btn-color, 20%); tint(@color, 20%); tint(@color, 20%))
+    };
+    &.active, &:active {
+        .btnColor(tint(@btn-color, 5%); tint(@color, 5%); tint(@color, 5%))
+    };
+};
+
+// 默认按钮有的样式     
+.btn-default() {
+    .controlBtn(#fff)
+};
+
+// 初始化按钮,根据大小判断显示
+.btn() {
+    background-color: #fff;
+    border: 1px solid transparent;
+    display: inline-block;
+    text-align: center;
+    color:black;
+    cursor: pointer;
+    outline: none;
+    padding: @btn-padding-base;
+    border-radius: 2px;
+    &:active {
+        transform: scale(0.9)
+    };
+    &-small {
+        .btnSize(@btn-padding-small; 12px; 5px);
+    };
+    &-large {
+        .btnSize(@btn-padding-large; 12px; 5px);
+    };
+    &-circle {
+        border-radius: 30px;
+    };
+    &-active {
+        background: #e2e6ea;
+        border-color:#e2e6ea;
+        &:hover {
+            background: #e2e6ea !important;
+            border-color:#e2e6ea !important;
+        }
+        &:active {
+            transform: scale(1) !important
+        };
+    }
+
+};

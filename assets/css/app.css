@@ -12,7 +12,7 @@ body, html {
   font-family: hotFont;
   src: url('../font/FZYHJW.woff');
 }
-span, p  {
+span, p{
   font-family: 'hotFont' !important;
 }
 .container {
@@ -21,3 +21,7 @@ span, p  {
   margin: 0 auto;
   width: 100%;
 }
+ul {
+  list-style: none;
+}
+

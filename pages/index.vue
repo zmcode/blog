@@ -5,13 +5,13 @@
           <Carousel  loop :height="300" class="Banner" easing='linear' dots='none' autoplay>
             <CarouselItem class="CarouselItem">
               <a href="/">
-                <img src="../assets/img/banner.png" alt="">
+                <img src="~/assets/img/banner.png" alt="">
               </a>  
             </CarouselItem>
             <CarouselItem>
-                <a href="/">
-                  <img src="../assets/img/banner2.png" alt="">
-                </a>
+              <a href="/">
+                <img src="~/assets/img/banner2.png" alt="">
+              </a>
             </CarouselItem>
           </Carousel>
 
@@ -23,21 +23,21 @@
             <div class="LeftInfoWrap">
                 <div class='MostUsersWrap'>
                     <div class="MostUsersHead">
-                        <img src="../assets/img/myhead.jpg" alt="">
+                        <img src="" alt="">
                         <div class="Winner"></div>
                     </div>
                     <div class="MostUsersInfo">
-                        <h3>遥近</h3>
-                        <p>信心来自实力,实力来自勤奋</p>
+                        <h3>敬请期待</h3>
+                        <p>???</p>
                     </div>
                     <div class="MostUsersData">
                       <div class="DataInfo">
                           <h4>文章</h4>
-                          <span>33</span>
+                          <span>???</span>
                       </div>
                       <div class="DataInfo">
                           <h4>获赞</h4>
-                          <span>666</span>
+                          <span>???</span>
                       </div>
                     </div>
                     <div class="GoodList">
@@ -46,32 +46,58 @@
                 </div>
                 <div class="BlogIntr">
                   <h3>其他</h3>
-                  <p>
-                    <nuxt-link to="/">博客纪念碑</nuxt-link>
-                  </p>
-                  <p>
+                  <myButton @click='showHistoy'>创站记录</myButton>
+                  <!-- <p>
                     <nuxt-link to="/">你提我改</nuxt-link>
-                  </p>
-                  <p>
-                    <nuxt-link to="/">关于我</nuxt-link>
-                  </p>
+                  </p> -->
                 </div>
             </div>
           </Col>
     </Row>
-    <Modal></Modal>
+    <div class="footerWrap">
+        <PageFooter/>
+    </div>
+    <Modal 
+      :visible='isShow'
+      :mask='true'
+      :line='true'
+      title='创站记录'
+      @onOk='isShow = false'
+      @onCancle='isShow = false'
+    >
+      <p>2018-10-20: 购买了域名yjdzm.com</p>
+      <p>2019-10-20: 想创建一个让很多人都喜欢使用的博客平台</p>
+      <p>2019-11-16: 购买了云服务器, 申请了备案</p>
+      <p>2019-11-17: 顺利通过阿里云的初审，提交了审局</p>
+    </Modal>
   </div>
 </template>
 
 <script>
-import Modal from '../components/myModal/index'
+
+import Modal from '../components/myModal'
+import myButton from '../components/Button'
+import PageFooter from '../components/footer/index'
 import ListItem from '../components/list/index'
 export default {
+  
   layout: 'blog',
   components: {
     ListItem,
+    PageFooter,
+    myButton,
     Modal
-  }
+  },
+  data() {
+    return {
+      isShow: false
+    }
+  },
+  methods: {
+    showHistoy() {
+      this.isShow = true
+    },
+  },
 }
 </script>
 
@@ -175,6 +201,11 @@ export default {
      }
    }
  }
+ .footerWrap {
+    background-color: #f6f7f8;
+    text-align: center;
+    width: 100%;
+  }
 
 </style>
  
