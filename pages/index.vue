@@ -41,15 +41,12 @@
                       </div>
                     </div>
                     <div class="GoodList">
-                      <nuxt-link to="/ranking">完整榜单<Icon type="ios-arrow-forward" size='17' style="margin-top: -4px"/></nuxt-link>
+                      <nuxt-link to="">完整榜单<Icon type="ios-arrow-forward" size='17' style="margin-top: -4px"/></nuxt-link>
                     </div>
                 </div>
                 <div class="BlogIntr">
                   <h3>其他</h3>
                   <myButton @click='showHistoy'>创站记录</myButton>
-                  <!-- <p>
-                    <nuxt-link to="/">你提我改</nuxt-link>
-                  </p> -->
                 </div>
             </div>
           </Col>

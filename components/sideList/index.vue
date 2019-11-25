@@ -1,24 +1,25 @@
 <template>
   <div class="utilWrap">
     <div>
-      <nav class="sideWrap">
-        <ul class="ContentWrap">
-            <p>文章分类</p>
-            <li class="sideItem">
-                <myButton :active="0 === active" @click='CateGoryArticle(-1, "")'>
-                    全部
-                </myButton>
-            </li>
-            <li class="sideItem" v-for="(item, index) in source" :key='index'>
-                <myButton 
-                  :active="index + 1 === active" 
-                  @click='CateGoryArticle(index, item.name)'
-                >
-                  {{ item.name }}
-                </myButton> 
-            </li>
-        </ul>
-      </nav>
+      <div style="position:fixed">
+         <nav class="sideWrap">
+            <ul class="ContentWrap">
+                <p>文章分类</p>
+                <li class="sideItem">
+                    <myButton :active="0 === active" @click='CateGoryArticle(-1, "")'>
+                        全部
+                    </myButton>
+                </li>
+                <li class="sideItem" v-for="(item, index) in source" :key='index'>
+                    <myButton 
+                      :active="index + 1 === active" 
+                      @click='CateGoryArticle(index, item.name)'
+                    >
+                      {{ item.name }}
+                    </myButton> 
+                </li>
+            </ul>
+        </nav>
       <div class="searchWrap" v-if="type === 'topic'">
         <Input 
           placeholder="搜索速记" 
@@ -28,8 +29,8 @@
           v-model="searchValue"
         />
       </div>
-    </div>
-    
+      </div>
+    </div>  
   </div>
 </template>
 
@@ -81,7 +82,7 @@ export default {
   margin-top: 20px;
   width: 150px;
   .sideWrap {
-    position: fixed;
+    // position: fixed;
     max-width: 150px;
     border-radius: 0.2rem;
     background-color: #fff;
@@ -104,7 +105,7 @@ export default {
   }
   .searchWrap {
     position: fixed;
-    margin-top: 260px;
+    margin-top: 10px;
     max-width: 150px;
   }
 }

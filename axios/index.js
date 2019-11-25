@@ -39,7 +39,6 @@ const httpServer = (opts, data) => {
         method: opts.method.toLowerCase(),
         url: opts.url,
         timeout: 3000,
-        async: false,
         // 配置不一样的baseURl,通过环境
         baseURL: opts.baseURL || process.env.VUE_APP_API,
         headers: Object.assign(headers, opts.headers),

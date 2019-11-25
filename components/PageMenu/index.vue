@@ -108,8 +108,12 @@ export default {
         box-sizing: border-box;
         line-height: normal;
         border-radius: 10px;
-        &:hover {
+        .nuxt-link-active {
             background: #e2e6ea;
+            border-radius: 10px;
+        }
+        &:hover {
+            // background: #e2e6ea;
             .DropList {
                 display: block;
             }
