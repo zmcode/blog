@@ -47,6 +47,14 @@
                 <div class="BlogIntr">
                   <h3>其他</h3>
                   <myButton @click='showHistoy'>创站记录</myButton>
+                  <h3>友链</h3>
+                   <p>
+                    <a href="https://uizph.com/">小辉哥</a>
+                  </p>
+                  <p>
+                    <a href="https://www.microanswer.cn/">Microanswer</a>
+                  </p>
+                  
                 </div>
             </div>
           </Col>
@@ -66,6 +74,7 @@
       <p>2019-10-20: 想创建一个让很多人都喜欢使用的博客平台</p>
       <p>2019-11-16: 购买了云服务器, 申请了备案</p>
       <p>2019-11-17: 顺利通过阿里云的初审，提交了审局</p>
+      
     </Modal>
   </div>
 </template>

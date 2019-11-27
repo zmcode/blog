@@ -8,13 +8,6 @@ body, html {
   background-color: #f6f7f8 !important;
 }
 
-@font-face {
-  font-family: hotFont;
-  src: url('../font/FZYHJW.woff');
-}
-span, p{
-  font-family: 'hotFont' !important;
-}
 .container {
   position: relative;
   min-width: 1200px;

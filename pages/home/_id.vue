@@ -81,6 +81,7 @@ export default {
     articleList
   },
   async asyncData({ params, error }) {
+   
     try {
       const { data } = await otherInfo({ id: params.id })
       return {

@@ -285,7 +285,6 @@ export default {
       .textCard {
         position: relative;
         .Richedit {
-          font-family: 'hotFont';
           font-size: 16px;
           position: relative;
           height: 100%;

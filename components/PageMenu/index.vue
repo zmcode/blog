@@ -131,7 +131,6 @@ export default {
             .NavText {
                 font-size: 16px;
                 color: black;
-                font-family: 'hotFont';
             }
         }
         .DropList {

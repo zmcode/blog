@@ -127,7 +127,6 @@ export default {
     outline: none;
     color: black;
     font-size: 16px;
-    font-family: "hotFont";
     &:active {
       outline: 0;
     }

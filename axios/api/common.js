@@ -47,7 +47,7 @@ export const cateGory = params => {
 export const otherInfo = ({ id }, params) => {
     return axiosTool.httpServer(
         {
-            url: `user/${id}/center`,
+            url: `/user/${id}/center`,
             method: 'get'
         },
         params
@@ -58,7 +58,7 @@ export const otherInfo = ({ id }, params) => {
 export const userArticle = ({ id }, params) => {
     return axiosTool.httpServer(
         {
-            url: `user/${id}/article`,
+            url: `/user/${id}/article`,
             method: 'get'
         },
         params

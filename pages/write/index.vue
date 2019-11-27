@@ -273,9 +273,6 @@ export default {
       span {
           font-family: SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
       }
-      .hljs-comment {
-          font-family: 'hotFont' !important;
-      }
   }
 }
 </style>

@@ -218,7 +218,6 @@ export default {
                         /deep/ .ivu-input {
                             height: 40px;
                             line-height: 40px;
-                            font-family: 'hotFont';
                             font-size: 14px;
                             color: black;
                             border: 1.5px solid #e2e6ea;
@@ -253,7 +252,6 @@ export default {
                     border: 1.5px solid #e2e6ea;
                     border-radius: 20px;
                     color: rgba(0, 0, 0, .65);
-                    font-family: 'hotFont';
                     &:hover {
                         background-color: #e2e6ea;
                     }
@@ -303,7 +301,6 @@ export default {
     /deep/ .ivu-input {
         height: 40px;
         line-height: 40px;
-        font-family: 'hotFont';
         font-size: 14px;
         color: black;
         border: 1.5px solid #e2e6ea;

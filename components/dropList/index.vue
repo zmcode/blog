@@ -25,7 +25,6 @@ export default {
     text-align: center;
     width: 100%;
     font-size: 12px;
-    font-family: 'hotFont';
     border-radius: 4px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(177, 180, 185, 0.45);

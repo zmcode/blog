@@ -54,7 +54,6 @@ export default {
     border-bottom: 1px solid rgba(0,0,0,.04);
   }
   .ListItem {
-    font-family: 'hotFont';
     line-height: 40px;
     height: 40px;
     &:hover {

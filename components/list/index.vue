@@ -95,7 +95,6 @@ data () {
             list-style: none;
             padding: 0 1.2rem;
             border-right: 1px solid hsla(0,0%,59.2%,.2);
-            font-family: 'hotFont';
            a {
                font-size: 14px;
                color: #909090;
