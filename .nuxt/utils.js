@@ -133,7 +133,7 @@ export async function setContext (app, context) {
       payload: context.payload,
       error: context.error,
       base: '/',
-      env: {"NODE_ENV":"production","VUE_APP_API":"http://localhost:3000"}
+      env: {"NODE_ENV":"production","VUE_APP_API":"https://api.yjdzm.com"}
     }
     // Only set once
     if (context.req) {
