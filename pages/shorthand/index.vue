@@ -32,7 +32,7 @@
       <div class="toolWrap">
         <div class="tool">
           <Upload 
-            :action="`${process.env.VUE_APP_API}/upload`"
+            :action="`${baseUrl}/upload`"
             :data="{ dir: 'image/'}"
             :show-upload-list='false'
             :on-success='upLoadsuccess'
@@ -95,6 +95,7 @@ export default {
   },
   data() {
     return {
+      baseUrl: process.env.VUE_APP_API,
       path: '/shorthand',
       topic: '', // 默认的主题
       value: '',
