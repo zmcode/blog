@@ -32,7 +32,7 @@
       <div class="toolWrap">
         <div class="tool">
           <Upload 
-            action="http://localhost:5000/api/upload"
+            :action="`${process.env.VUE_APP_API}/upload`"
             :data="{ dir: 'image/'}"
             :show-upload-list='false'
             :on-success='upLoadsuccess'
