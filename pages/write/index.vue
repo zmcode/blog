@@ -130,7 +130,6 @@ export default {
          $imgAdd(pos, $file){
            let formdata = new FormData()
            formdata.append('file', $file)
-           console.log($file)
            upload(formdata)
             .then(res => {
                 if(res.code === 200) {
@@ -184,6 +183,7 @@ export default {
             
         },
         changeValue(value, render) {
+
             this.source = value
             this.content = render
         },
@@ -195,7 +195,10 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.login.userInfo
-        })
+        }),
+        ...mapState({
+            UserToken: state => state.login.UserToken
+        }),
     },
     created() {
         // 如果有id,那么就是编辑进来的
@@ -214,6 +217,12 @@ export default {
             })
         }
         
+    },
+    mounted() {
+        if(!this.UserToken) {
+            this.$Message.error('需要登陆才可以发布文章')
+            this.$router.replace('/login')
+        }
     }
 }
 </script>

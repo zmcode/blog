@@ -81,7 +81,6 @@ export default {
       })
     },
     handleInput(e) {
-      console.log(e.target.value)
       let value = e.target.value
       this.$emit('input', value)
     }

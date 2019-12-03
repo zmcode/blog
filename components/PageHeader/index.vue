@@ -16,7 +16,7 @@
                             <Input 
                                 v-model="searchValue" 
                                 icon="md-search" 
-                                placeholder="搜索文章" 
+                                :placeholder="`搜索${this.searchType === 'topic' ? '速记' : '文章'}`"
                                 style="width: 200px"
                                 @on-enter='searchArticle'
                                 @on-click='searchArticle'
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+/*eslint-disable no-prototype-builtins */
 import { mapState } from 'vuex'
 import PageMenu from '../PageMenu/index'
 import DropList from '../../components/dropList/index'
@@ -110,6 +111,7 @@ export default {
                     id: 'login',
                 }
             ],
+            searchType: 'q'
         }
     },
     components: {
@@ -143,7 +145,7 @@ export default {
                 this.$Message.error('不能搜索空的文本')
                 return
             }
-            this.$router.push(`/search?q=${this.searchValue}`)
+            this.$router.push(`/search?${this.searchType}=${this.searchValue}`)
         }
     },
     computed: {
@@ -151,6 +153,12 @@ export default {
             userInfo: state => state.login.userInfo
         })
     },
+    watch: {
+        $route({ path, query }) {
+           path === '/shorthand' || query.hasOwnProperty('topic') ? this.searchType = 'topic' : this.searchType = 'q'
+           this.searchValue = ''
+        }
+    }
 }
 </script>
 

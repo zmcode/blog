@@ -76,7 +76,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.item._id)
         this.status = this.item.status
         this.id = this.item._id
         this.item.status === 'draft' ? this.howTogo = `/write?draftId=${this.item._id}` : this.howTogo = `/post/${this.item._id}`
@@ -96,7 +95,6 @@ export default {
             }
         },
         configDelete() {
-            console.log(this.id)
             deleteArticle({id: this.id})
                 .then(res => {
                     if(res.code === 200)

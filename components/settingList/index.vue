@@ -38,7 +38,6 @@ data () {
     },
      methods: {
         show(name) {
-            console.log(name)
            switch (name) {
                case '个人资料':
                    this.activeNow = 0

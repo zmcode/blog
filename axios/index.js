@@ -22,7 +22,7 @@ myAxios.interceptors.response.use(
     },
     error => {
         // 没有token或者过期处理
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 401 || error.response.status === 404) {
             process.browser && (window.location.href = '/login')
         }
     }

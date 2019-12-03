@@ -4,11 +4,15 @@ export const actions = {
         if (req.headers.cookie && process.server) {
             const cookie = req.headers.cookie || ''
             const res = cookieParse.parse(cookie)
+            console.log(res)
             store.commit('login/changeUserInfo', {
                 userInfo: JSON.parse(res.userinfo).userInfo
             })
             store.commit('login/changeUserToken', {
                 token: res.token || ''
+            })
+            store.commit('login/changeStatus', {
+                isLogin: res.isLogin || false
             })
         }
     }

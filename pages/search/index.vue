@@ -5,31 +5,27 @@
       <span style="color: red">{{ keyword }} </span>
       关键字的{{ isArticle ? '文章' : '速记' }}一共有 <span style="color: black">{{ total }}</span> 篇
     </div>
-    <contentLayout>
-      <template slot="main">
-        <div v-if='isArticle'> 
-          <articleList 
-            v-for='(item, index) in listData' 
-            :item='item' 
-            :key='index'
-          />
-        </div>
-        <div v-if='!isArticle'>
-          <shorthandList :source='listData'/>
-        </div>
-        <Skeleton v-if="loading"/>
-        <div class="noArticle" v-if="!loading && listData.length === 0"> 
-          <p>目前没有{{isArticle ? '文章' : '速记' }}哦</p>
-        </div>
-      </template>
-      <template slot="side">
-        <sideList :source='sideData'/>
-      </template>
-  </contentLayout>
+    <div class="ListWrap"> 
+      <div v-if='isArticle'> 
+        <articleList 
+          v-for='(item, index) in listData' 
+          :item='item' 
+          :key='index'
+        />
+      </div>
+      <div v-if='!isArticle'>
+        <shorthandList :source='listData'/>
+      </div>
+      <Skeleton v-if="loading"/>
+      <div class="noArticle" v-if="!loading && listData.length === 0"> 
+        <p>目前没有{{isArticle ? '文章' : '速记' }}哦</p>
+      </div>
+    </div>
 </div>
 </template>
 
 <script>
+/*eslint-disable no-prototype-builtins */
 import shorthandList from '../../components/shorthandList'
 import { GetRecordSelect } from '.././../axios/api/common'
 import { ShortHandSearch } from '../../axios/api/shorthand'
@@ -37,13 +33,13 @@ import articleList from  '../../components/articleList'
 import { SearchArticle } from '../../axios/api/article'
 import Skeleton from '../../components/Skeleton'
 import { cateGory } from '../../axios/api/common'
-import sideList from '../../components/sideList'
-import contentLayout from '../../components/contentLayout/index'
+// import sideList from '../../components/sideList'
+// import contentLayout from '../../components/contentLayout/index'
 export default {
   layout: 'blog',
   components: {
-    contentLayout,
-    sideList,
+    // contentLayout,
+    // sideList,
     Skeleton,
     articleList,
     shorthandList
@@ -82,10 +78,10 @@ export default {
               this.loading = false
               this.nextPage = res.data.next
               this.total = res.data.total
+              this.hasNextPage = res.data.hasNextPage
             }, 500)
           })
       } else {
-        console.log('嘴周执行')
        ShortHandSearch({
           page: this.nextPage,
           keyword: this.keyword
@@ -97,14 +93,33 @@ export default {
               this.loading = false
               this.nextPage = res.data.next
               this.total = res.data.total
+              this.hasNextPage = res.data.hasNextPage
             }, 500)
           })
       }
-    }
+    },
+    handleScroll() {
+       
+        // 变量scrollTop是滚动条滚动时，距离顶部的距离
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        //变量windowHeight是可视区的高度
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+        //变量scrollHeight是滚动条的总高度
+        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+        //滚动条到底部的条件
+        if(scrollTop + windowHeight > scrollHeight - 1){
+          if(this.loading)return
+          if(!this.hasNextPage)return
+          if(this.$route.query.hasOwnProperty('topic')) {
+            this.hadleLoadMore(this.listData, false)
+          } else {
+            this.hadleLoadMore(this.listData, true)
+          }
+        } 
+    },
   },
   async asyncData({ query, error }) {
     const keyword = query.q || query.topic || ''
-    console.log(keyword,3333)
     try {
       // 搜索文章
       if(query.q) {
@@ -120,7 +135,8 @@ export default {
           loading: false,
           keyword: query.q,
           sideData: data,
-          isArticle: true
+          isArticle: true,
+          s: query
         }
       } else {
         const {data: { list, next, hasNextPage, total }} = await ShortHandSearch({
@@ -135,7 +151,8 @@ export default {
           loading: false,
           keyword: query.topic,
           sideData: data,
-          isArticle: false
+          isArticle: false,
+          x: query
         }
       }
     } catch {
@@ -143,8 +160,8 @@ export default {
     }
   },
   mounted() {
-    console.log(this.isArticle,233333333333)
-  }
+    window.addEventListener('scroll', this.handleScroll)
+  },
 }
 </script>
 
@@ -155,7 +172,6 @@ export default {
   background: #fff;
   padding: 20px;
   text-align: center;
-  width: 90%;
 
 }
 .noArticle {
@@ -163,5 +179,10 @@ export default {
   background: #fff;
   text-align: center;
   margin-top: 20px;
+}
+.ListWrap {
+  width: 95%;
+  margin: auto;
+  padding: 20px 0
 }
 </style> 

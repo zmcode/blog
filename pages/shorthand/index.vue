@@ -1,4 +1,5 @@
 <template>
+<div>
 <contentLayout>
   <div slot='main'>
     <div class="publishWrap">
@@ -68,6 +69,18 @@
     <sideList :source='topicData' :path='path'></sideList>
   </div>
 </contentLayout>
+<Modal
+  title='提示'
+  :visible='showModal'
+  :mask='true'
+  @onOk='goLogin'
+  @onCancle='showModal = false'
+  okText='去登陆'
+>
+    <p>检测到你没有登录账号或者账号验证过期,需要登陆才可以发布速记</p>
+</Modal>
+</div>
+
 </template>
 
 <script>
@@ -82,6 +95,7 @@ import { mapState } from 'vuex'
 import { upload } from '../../axios/api/common'
 import myButton from '../../components/Button'
 import contentLayout  from '../../components/contentLayout'
+import Modal from '../../components/myModal'
 export default {
   layout: 'blog',
   components: {
@@ -92,9 +106,11 @@ export default {
     sideList,
     Skeleton,
     shorthandList,
+    Modal
   },
   data() {
     return {
+      showModal:false,
       baseUrl: process.env.VUE_APP_API,
       path: '/shorthand',
       topic: '', // 默认的主题
@@ -124,7 +140,6 @@ export default {
             topic: query.topic
       })
       const { data } = await GetRecordSelect()
-      console.log(data)
       return {
         listData: list,
         hasNextPage: hasNextPage,
@@ -139,6 +154,11 @@ export default {
   methods: {
     // 监听value变化
     changeValue(e) {
+      console.log(this.UserToken)
+      if(!this.UserToken) {
+        this.showModal = true
+        return
+      }
       this.value = e.target.innerText
     },
     // 删除图片后删除对应的地址数组
@@ -215,7 +235,9 @@ export default {
           this.getShortHandList(this.listData)
         } 
     },
-    // 模糊搜索
+    goLogin() {
+      this.$router.replace('/login')
+    }
 
   },
   mounted() {
@@ -224,7 +246,6 @@ export default {
     // 设置粘贴上传图片
     document.addEventListener('paste', function (event) { 
       var items = (event.clipboardData || window.clipboardData).items
-      console.log(items)
       var file = null
       if (items && items.length) {
         // 检索剪切板items

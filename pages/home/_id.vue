@@ -81,7 +81,6 @@ export default {
     articleList
   },
   async asyncData({ params, error }) {
-   
     try {
       const { data } = await otherInfo({ id: params.id })
       return {
@@ -142,7 +141,7 @@ export default {
       // 获取当前登录账号的id,跟当前页面的id进行对比,以确定是否显示编辑
       userID: state => state.login.userInfo.id
     })
-  }
+  },
 }
 </script>
 <style lang="less" scoped>

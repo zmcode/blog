@@ -44,9 +44,6 @@ export default {
       type: Array,
     }
   },
-  mounted() {
-    console.log(this.source,2323)
-  },
   components: {
     Viewer
   }

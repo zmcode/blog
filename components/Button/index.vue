@@ -79,9 +79,6 @@
             this.$emit('click', event)
         }
     },
-    mounted() {
-        console.log(this.to)
-    }
  }
  </script>
 

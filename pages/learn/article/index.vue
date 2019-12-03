@@ -59,7 +59,6 @@ export default {
         let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
         //滚动条到底部的条件
         if(scrollTop + windowHeight > scrollHeight - 1){
-          console.log(this.hasNextPage)
           if(this.loading)return
           if(!this.hasNextPage)return
           this.getListData(this.listData)
@@ -101,7 +100,6 @@ export default {
   },
   watch: {
     $route({ query }) {
-      console.log(query)
       this.listData = []
       this.nextPage = 1
       this.activeName = query.category || ''
