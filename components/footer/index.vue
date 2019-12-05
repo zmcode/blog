@@ -2,7 +2,7 @@
   <div class="footer-main">
       <span>Copyright © 2018-{{ new Date().getFullYear() }} 遥近</span>
     <span> · </span>
-    <span>粤ICP备666666</span>
+    <a>粤ICP备19145621号-1</a>
   </div>
 </template>
 

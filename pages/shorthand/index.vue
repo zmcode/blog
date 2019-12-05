@@ -10,7 +10,7 @@
                   contenteditable="true" 
                   class="Richedit" 
                   ref="text"
-                  placeholder='快速记录你遇到的问题或者分享你的小技巧'
+                  placeholder='快速记录你遇到的问题或者分享你的小技巧,请不要上传代码'
                   :class="[{ empty: value }]"
                   @input="changeValue($event)"
                  >
@@ -154,7 +154,6 @@ export default {
   methods: {
     // 监听value变化
     changeValue(e) {
-      console.log(this.UserToken)
       if(!this.UserToken) {
         this.showModal = true
         return
@@ -244,7 +243,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
     let _this = this
     // 设置粘贴上传图片
-    document.addEventListener('paste', function (event) { 
+    this.$refs.text.addEventListener('paste', function (event) { 
       var items = (event.clipboardData || window.clipboardData).items
       var file = null
       if (items && items.length) {
@@ -268,15 +267,15 @@ export default {
   },
   computed: {
         ...mapState({
-            UserToken: state => state.login.UserToken
+          UserToken: state => state.login.UserToken
         }),
         header(){
-            return {
-                'Authorization': 'Bearer' + ' ' + this.UserToken
-            }
+          return {
+            'Authorization': 'Bearer' + ' ' + this.UserToken
+          }
         },
          ...mapState({
-            userInfo: state => state.login.userInfo
+          userInfo: state => state.login.userInfo
         })
     },
     watch: {

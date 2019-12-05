@@ -17,7 +17,7 @@
           </div>
 
           <div class="pinContent">
-            <p>{{item.content}}</p>
+            <span class="content">{{item.content}}</span>
           </div>
 
           <div class="pinImg">
@@ -78,6 +78,9 @@ export default {
       .pinContent {
           margin: 10px 0 10px 40px;
           color: black;
+          .content {
+            white-space: pre-wrap;
+          }
       }
       .pinImg {
          margin: 10px 0 10px 40px;

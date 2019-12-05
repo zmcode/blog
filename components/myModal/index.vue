@@ -10,6 +10,7 @@
     @parmas line [Boolean] 是否显示分割
     @parmas onOk [Function] 点击确定的事件
     @parmas onCancle [Function] 点击取消的事件
+    @parmas scroll [Boolean] 是否显示滚动内容区
  */
 <template>
     <div>
@@ -27,7 +28,7 @@
                     </div>
 
                     <!-- 内容区域 -->
-                    <div class="ModalContent" :class='{ line }'>
+                    <div class="ModalContent" :class='{ line,  scrollContent: scroll}'>
                         <slot></slot>
                     </div>
 
@@ -79,6 +80,10 @@ export default {
         visible: {
             type: Boolean,
             type: false,
+        },
+        scroll: {
+            type: Boolean,
+            type: false
         }
     },
     mounted() {
@@ -94,7 +99,7 @@ export default {
             let style = {}
             const width = parseInt(this.width)
 
-            let styleWidth = {width: `${width}px`}
+            let styleWidth = { width: `${width}px`}
             
             // 取得自定义的style
             let customStyles = this.styles ? this.styles : {}
@@ -154,6 +159,10 @@ export default {
             .ModalContent {
                 padding: 10px;
             };
+            .scrollContent {
+                height: 200px;
+                overflow-y: auto;
+            }
             .ModalFooter {
                 padding: 5px 10px;
                 text-align: right;
