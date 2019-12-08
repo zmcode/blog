@@ -106,6 +106,9 @@ export default {
       this.getListData(this.listData)
     }
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 }
 </script>
 

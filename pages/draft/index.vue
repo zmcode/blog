@@ -76,6 +76,9 @@ export default {
       this.getDraftList(this.listData)
     }
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
   
 }
 </script>

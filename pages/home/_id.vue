@@ -142,6 +142,9 @@ export default {
       userID: state => state.login.userInfo.id
     })
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 }
 </script>
 <style lang="less" scoped>

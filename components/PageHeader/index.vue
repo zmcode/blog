@@ -16,7 +16,7 @@
                             <Input 
                                 v-model="searchValue" 
                                 icon="md-search" 
-                                :placeholder="`搜索${this.searchType === 'topic' ? '速记' : '文章'}`"
+                                :placeholder="`搜索${searchName}`"
                                 style="width: 200px"
                                 @on-enter='searchArticle'
                                 @on-click='searchArticle'
@@ -111,7 +111,8 @@ export default {
                     id: 'login',
                 }
             ],
-            searchType: 'q'
+            searchType: 'q',
+            searchName: '文章'
         }
     },
     components: {
@@ -155,7 +156,17 @@ export default {
     },
     watch: {
         $route({ path, query }) {
-           path === '/shorthand' || query.hasOwnProperty('topic') ? this.searchType = 'topic' : this.searchType = 'q'
+            if(path === '/shorthand' || query.hasOwnProperty('topic')) {
+                this.searchType = 'topic'
+                this.searchName = '速记'
+            } else if(path === '/essay' || query.hasOwnProperty('type')) {
+                this.searchType = 'type'
+                this.searchName = '代码'
+            } else {
+                this.searchType = 'q'
+                this.searchName = '文章'
+            }
+        //    path === '/shorthand' || query.hasOwnProperty('topic') ? this.searchType = 'topic' : this.searchType = 'q'
            this.searchValue = ''
         }
     }

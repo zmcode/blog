@@ -18,3 +18,13 @@ export const CodeShareList = params => {
     params
   )
 }
+
+export const CodeShareSearch = params => {
+  return axiosTool.httpServer(
+    {
+      url: '/codeshare/search',
+      method: 'get'
+    },
+    params
+  )
+}

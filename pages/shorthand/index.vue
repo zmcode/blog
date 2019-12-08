@@ -7,7 +7,7 @@
         <div class="textWrap" >
             <div class="textCard"> 
                  <div 
-                  contenteditable="true" 
+                  contenteditable="plaintext-only" 
                   class="Richedit" 
                   ref="text"
                   placeholder='快速记录你遇到的问题或者分享你的小技巧,请不要上传代码'
@@ -266,6 +266,9 @@ export default {
           _this.imgUrlData.push(res.data.url)
         })
     })
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   computed: {
         ...mapState({

@@ -3,22 +3,25 @@
    <div v-if='listData.length > 0' class="SearchInfo"> 
       含 
       <span style="color: red">{{ keyword }} </span>
-      关键字的{{ isArticle ? '文章' : '速记' }}一共有 <span style="color: black">{{ total }}</span> 篇
+      关键字的{{ typeName }}一共有 <span style="color: black">{{ total }}</span> 篇
     </div>
     <div class="ListWrap"> 
-      <div v-if='isArticle'> 
+      <div v-if='requestType === "article"'> 
         <articleList 
           v-for='(item, index) in listData' 
           :item='item' 
           :key='index'
         />
       </div>
-      <div v-if='!isArticle'>
+      <div v-if='requestType === "shorthand"'>
         <shorthandList :source='listData'/>
+      </div>
+      <div v-if="requestType === 'type'">
+        <codeList :ListData='item' v-for='(item, index) in listData' :key="index"></codeList>
       </div>
       <Skeleton v-if="loading"/>
       <div class="noArticle" v-if="!loading && listData.length === 0"> 
-        <p>目前没有{{isArticle ? '文章' : '速记' }}哦</p>
+        <p>找不到相关的{{typeName }}哦</p>
       </div>
     </div>
 </div>
@@ -27,14 +30,12 @@
 <script>
 /*eslint-disable no-prototype-builtins */
 import shorthandList from '../../components/shorthandList'
-import { GetRecordSelect } from '.././../axios/api/common'
 import { ShortHandSearch } from '../../axios/api/shorthand'
 import articleList from  '../../components/articleList'
 import { SearchArticle } from '../../axios/api/article'
 import Skeleton from '../../components/Skeleton'
-import { cateGory } from '../../axios/api/common'
-// import sideList from '../../components/sideList'
-// import contentLayout from '../../components/contentLayout/index'
+import { CodeShareSearch } from '../../axios/api/codeShare'
+import codeList from '../../components/codeList'
 export default {
   layout: 'blog',
   components: {
@@ -42,7 +43,8 @@ export default {
     // sideList,
     Skeleton,
     articleList,
-    shorthandList
+    shorthandList,
+    codeList
   },
   data() {
     return {
@@ -51,26 +53,29 @@ export default {
   },
   watch: {
     $route({ query }) {
+      console.log(query)
       this.listData = []
       this.nextPage = 1
-      this.keyword = query.q || query.topic || ''
+      this.keyword = query.q || query.topic || query.type || ''
       if(query.q) {
-        this.isArticle = true
-        this.hadleLoadMore([], this.isArticle)
+        this.requestType = 'article'
+      } else if(query.topic) {
+        this.requestType = 'shorthand'
       } else {
-        this.isArticle = false
-        this.hadleLoadMore([], this.isArticle)
+        this.requestType = 'type'
       }
+      this.hadleLoadMore([], this.requestType)
     }
   },
   methods: {
     hadleLoadMore(list= [], isArticle) {
       this.loading = true
-      if(isArticle) {
-        SearchArticle({
-          page: this.nextPage,
-          keyword: this.keyword
-        })
+      switch (isArticle) {
+        case 'article':
+          SearchArticle({
+            page: this.nextPage,
+            keyword: this.keyword
+          })
           .then(res => {
             if(res.code === 200)
             setTimeout(() => {
@@ -81,11 +86,28 @@ export default {
               this.hasNextPage = res.data.hasNextPage
             }, 500)
           })
-      } else {
-       ShortHandSearch({
-          page: this.nextPage,
-          keyword: this.keyword
-        })
+          break
+        case 'shorthand':
+          ShortHandSearch({
+            page: this.nextPage,
+            keyword: this.keyword
+          })
+          .then(res => {
+            if(res.code === 200)
+            setTimeout(() => {
+              this.listData = list.concat(res.data.list)
+              this.loading = false
+              this.nextPage = res.data.next
+              this.total = res.data.total
+              this.hasNextPage = res.data.hasNextPage
+            }, 500)
+          })
+          break
+        case 'type':
+          CodeShareSearch({
+            page: this.nextPage,
+            keyword: this.keyword
+          })
           .then(res => {
             if(res.code === 200)
             setTimeout(() => {
@@ -111,22 +133,23 @@ export default {
           if(this.loading)return
           if(!this.hasNextPage)return
           if(this.$route.query.hasOwnProperty('topic')) {
-            this.hadleLoadMore(this.listData, false)
+            this.hadleLoadMore(this.listData, 'shorthand')
+          } else if(this.$route.query.hasOwnProperty('q')) {
+            this.hadleLoadMore(this.listData, 'article')
           } else {
-            this.hadleLoadMore(this.listData, true)
+            this.hadleLoadMore(this.listData, 'type')
           }
         } 
     },
   },
   async asyncData({ query, error }) {
-    const keyword = query.q || query.topic || ''
+    const keyword = query.q || query.topic || query.type || ''
     try {
       // 搜索文章
       if(query.q) {
         const {data: { list, next, hasNextPage, total }} = await SearchArticle({
             keyword
         })
-        const { data } = await cateGory()
         return {
           listData:list,
           nextPage:next,
@@ -134,15 +157,14 @@ export default {
           total,
           loading: false,
           keyword: query.q,
-          sideData: data,
           isArticle: true,
-          s: query
+          requestType: 'article',
+          typeName: '文章'
         }
-      } else {
+      } else if(query.topic) {
         const {data: { list, next, hasNextPage, total }} = await ShortHandSearch({
             keyword
         })
-        const { data } = await GetRecordSelect()
         return {
           listData:list,
           nextPage:next,
@@ -150,9 +172,24 @@ export default {
           total,
           loading: false,
           keyword: query.topic,
-          sideData: data,
           isArticle: false,
-          x: query
+          requestType: 'shorthand',
+          typeName: '速记'
+        }
+      } else {
+        const {data: { list, next, hasNextPage, total }} = await CodeShareSearch({
+            keyword
+        })
+        return {
+          listData:list,
+          nextPage:next,
+          hasNextPage,
+          total,
+          loading: false,
+          keyword: query.topic,
+          isArticle: false,
+          requestType: 'type',
+          typeName: '代码'
         }
       }
     } catch {
@@ -162,6 +199,9 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 }
 </script>
 

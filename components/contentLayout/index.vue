@@ -1,10 +1,10 @@
 <template>
    <div class="main">
-      <Row class="content">
-        <Col span="17" style="border-radis: 10px;"><slot name='main'></slot></Col>
-        <Col span="6" offset='1'><slot name='side'></slot></Col>
-    </Row>
-</div>
+        <Row class="content">
+            <Col span="17" style="border-radis: 10px;"><slot name='main'></slot></Col>
+            <Col span="6" offset='1'><slot name='side'></slot></Col>
+        </Row>
+    </div>
 </template>
 
 <script>
