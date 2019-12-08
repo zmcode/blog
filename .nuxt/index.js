@@ -17,6 +17,7 @@ import nuxt_plugin_iview_2298c11a from 'nuxt_plugin_iview_2298c11a' // Source: .
 import nuxt_plugin_filter_2aab3a6c from 'nuxt_plugin_filter_2aab3a6c' // Source: ..\\plugins\\filter (mode: 'all')
 import nuxt_plugin_vuemavoneditor_e5e1de58 from 'nuxt_plugin_vuemavoneditor_e5e1de58' // Source: ..\\plugins\\vue-mavon-editor (mode: 'all')
 import nuxt_plugin_vviewer_5558cd3d from 'nuxt_plugin_vviewer_5558cd3d' // Source: ..\\plugins\\v-viewer (mode: 'all')
+import nuxt_plugin_hightLight_d81bf642 from 'nuxt_plugin_hightLight_d81bf642' // Source: ..\\plugins\\hightLight.js (mode: 'client')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -191,6 +192,10 @@ async function createApp (ssrContext) {
 
   if (typeof nuxt_plugin_vviewer_5558cd3d === 'function') {
     await nuxt_plugin_vviewer_5558cd3d(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_hightLight_d81bf642 === 'function') {
+    await nuxt_plugin_hightLight_d81bf642(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

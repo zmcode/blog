@@ -1,7 +1,7 @@
 <template>
   <div class="ArticleWrap">
     <div class="ArticleDetail"> 
-      <h1 style='color: black; textAlign: center'>{{ detail.title }}</h1>
+      <h1 style='color: black; text-align: center'>{{ detail.title }}</h1>
       <div class="authorInfo"> 
         <nuxt-link :to="`/home/${detail.user_info.id}`">
           <img :src="detail.user_info.avatar" >

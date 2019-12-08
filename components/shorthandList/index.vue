@@ -85,7 +85,8 @@ export default {
       .pinImg {
          margin: 10px 0 10px 40px;
          img {
-           margin-left: 4px;
+            margin-left: 4px;
+            max-width: 100%;
          }
       }
       .pinTopic {

@@ -84,6 +84,7 @@
 </template>
 
 <script>
+/*eslint-disable no-useless-escape */
 import shorthandList from '../../components/shorthandList'
 import Skeleton from '../../components/Skeleton'
 import { publishShortHand, ShortHandList } from '../../axios/api/shorthand'
@@ -158,6 +159,7 @@ export default {
         this.showModal = true
         return
       }
+      e.target.innerText = e.target.innerText.replace(/<[\/\s]*(?:(?!div|br)[^>]*)>/g,'')
       this.value = e.target.innerText
     },
     // 删除图片后删除对应的地址数组

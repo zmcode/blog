@@ -4,7 +4,7 @@
       <div style="position:fixed">
          <nav class="sideWrap">
             <ul class="ContentWrap">
-                <p>文章分类</p>
+                <p>分类</p>
                 <li class="sideItem">
                     <myButton :active="0 === active" @click='CateGoryArticle(-1, "")'>
                         全部

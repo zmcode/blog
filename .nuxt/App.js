@@ -15,6 +15,12 @@ import '..\\assets\\css\\app.css'
 
 import '..\\assets\\css\\input.less'
 
+import '..\\node_modules\\codemirror\\lib\\codemirror.css'
+
+import '..\\node_modules\\codemirror\\addon\\merge\\merge.css'
+
+import '..\\node_modules\\codemirror\\theme\\ambiance.css'
+
 import _2d21d098 from '..\\layouts\\blog.vue'
 import _77a66d33 from '..\\layouts\\login.vue'
 import _6f6c098b from './layouts/default.vue'
@@ -22,7 +28,7 @@ import _6f6c098b from './layouts/default.vue'
 const layouts = { "_blog": _2d21d098,"_login": _77a66d33,"_default": _6f6c098b }
 
 export default {
-  head: {"title":"myBlog","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"yaojin Blog"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
+  head: {"title":"遥近-不一样的博客平台","meta":[{"charset":"utf-8"},{"name":"referrer","content":"no-referrer"},{"name":"viewport","content":"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"},{"hid":"keywords","name":"keywords","content":"遥近博客,前端技术,web,前端开发, 技术分享, 经验分享"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
   render (h, props) {
     const loadingEl = h('NuxtLoading', { ref: 'loading' })

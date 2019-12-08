@@ -22,7 +22,7 @@
                                 @on-click='searchArticle'
                             />
                         </div>
-                         <!--<nuxt-link to="/login" class="LoginBtn">登录</nuxt-link>-->
+                        <nuxt-link to="/login" class="LoginBtn" v-if="!userInfo.hasOwnProperty('avatar')">登录</nuxt-link>
                         <!-- <Badge :count="3" class="message">
                             <nuxt-link
                                 key='message'
@@ -32,7 +32,7 @@
                                 <Icon type="md-notifications" size="28"/>
                             </nuxt-link>
                         </Badge> -->
-                        <div class="User">
+                        <div class="User" v-if="userInfo.hasOwnProperty('avatar')">
                             <div class="UserHeader">
                                  <Avatar icon="ios-person" :src='userInfo.avatar'/>
                             </div>

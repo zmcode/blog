@@ -4,14 +4,15 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: '遥近-不一样的博客平台',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {name: 'referrer', content: 'no-referrer'},
+      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
       {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || ''
+        hid: 'keywords',
+        name: 'keywords',
+        content: '遥近博客,前端技术,web,前端开发, 技术分享, 经验分享'
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -26,7 +27,16 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ['iview/dist/styles/iview.css', '@/assets/css/app.css', '@/assets/css/input.less'],
+  css: [
+    'iview/dist/styles/iview.css', 
+    '@/assets/css/app.css', 
+    '@/assets/css/input.less',
+    'codemirror/lib/codemirror.css',
+    // merge css
+    'codemirror/addon/merge/merge.css',
+    // theme css
+    'codemirror/theme/ambiance.css'
+  ],
   styleResources: {
     less: ['./assets/styles/variable.less', './assets/mixins/button.less']
   },
@@ -37,7 +47,8 @@ module.exports = {
     '@/plugins/iview',
     '@/plugins/filter',
     { src: '@/plugins/vue-mavon-editor', srr: false },
-    { src: '@/plugins/v-viewer', srr: false }
+    { src: '@/plugins/v-viewer', srr: false },
+    { src: '@/plugins/hightLight.js', ssr: false }
   ],
   /*
    ** Nuxt.js dev-modules

@@ -9,7 +9,10 @@
                 </div>
             </nuxt-link>
             <div class="handleWrap">
-                <img :src="item.user_info.avatar" class="userHead">
+                <nuxt-link :to="`/home/${item.user_info.id}`">
+                    <img :src="item.user_info.avatar" class="userHead">
+                </nuxt-link>
+                <!-- <img :src="item.user_info.avatar" class="userHead"> -->
                 <span>{{ item.user_info.name }}</span>
                 <div class="handle" v-if='showHandle'>
                     <Icon type="ios-list"/>
