@@ -110,7 +110,7 @@ export default {
     },
   },
   mounted() {
-console.log('\n%c(づ￣ ³￣)づヾ 作者：遥近%c 1.01版本 2019-12-8 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
+console.log('\n%c遥近博客%c 1.01版本 2019-12-08 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
   }
 }
 </script>

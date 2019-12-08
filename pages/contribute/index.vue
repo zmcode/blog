@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { publishCodeShare } from '../../axios/api/codeShare'
 import myButton from '../../components/Button'
 import EditorCode from '../../components/MonacoEditor'
@@ -115,6 +116,17 @@ export default {
     },
     changeType(value) {
       this.type = value
+    }
+  },
+  computed: {
+      ...mapState({
+          UserToken: state => state.login.UserToken
+      }),
+  },
+  mounted() {
+    if(!this.UserToken) {
+      this.$Message.error('需要登陆才可以分享代码')
+      this.$router.replace('/login')
     }
   }
 }

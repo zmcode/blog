@@ -53,7 +53,6 @@ export default {
   },
   watch: {
     $route({ query }) {
-      console.log(query)
       this.listData = []
       this.nextPage = 1
       this.keyword = query.q || query.topic || query.type || ''

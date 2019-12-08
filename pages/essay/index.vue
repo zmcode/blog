@@ -1,7 +1,9 @@
 <template>
   <contentLayout>
     <div slot='main'>
-      <codeList :ListData='item' v-for='(item, index) in list' :key="index"></codeList>
+      <div v-if="reFresh">
+        <codeList :ListData='item' v-for='(item, index) in list' :key="index"></codeList>
+      </div>
       <div class="pageWrap">
         <Page size="small" :total='total' :pageSize='5' @on-change='getMoreList'/>
       </div>
@@ -21,6 +23,9 @@ import contentLayout  from '../../components/contentLayout'
 export default {
   layout: 'blog',
   data() {
+    return {
+      reFresh:true
+    }
   },
   components: {
     contentLayout,
@@ -37,7 +42,7 @@ export default {
         total,
         currentPage,
         pageSize,
-        hasNextPage
+        hasNextPage,
       }
     } catch {
       error({ statusCode: 404 })
@@ -50,9 +55,19 @@ export default {
       })
        .then(res => {
          this.list = res.data.list
+         document.documentElement.scrollTop = 0
        })
     }
-  } 
+  },
+  watch: {
+    list() {
+      // 重新渲染子组件,让其可以重新计算高度
+      this.reFresh = false
+      this.$nextTick(()=>{
+        this.reFresh = true
+      })
+    }
+  }
 }
 </script>
 
