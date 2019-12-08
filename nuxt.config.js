@@ -7,7 +7,7 @@ module.exports = {
     title: '遥近-不一样的博客平台',
     meta: [
       { charset: 'utf-8' },
-      {name: 'referrer', content: 'no-referrer'},
+      // {name: 'referrer', content: 'no-referrer'},
       { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
       {
         hid: 'keywords',
