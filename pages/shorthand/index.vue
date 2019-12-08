@@ -159,8 +159,7 @@ export default {
         this.showModal = true
         return
       }
-      e.target.innerText = e.target.innerText.replace(/<[\/\s]*(?:(?!div|br)[^>]*)>/g,'')
-      this.value = e.target.innerText
+      this.value = e.target.innerText.replace(/<[\/\s]*(?:(?!div|br)[^>]*)>/g,'')
     },
     // 删除图片后删除对应的地址数组
     deleteImg(index) {
