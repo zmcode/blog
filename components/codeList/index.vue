@@ -136,6 +136,7 @@ export default {
         width: 35px;
         height: 35px;
         margin-right: 10px;
+        border-radius: 50%
       }
     };
     .typeInfo {

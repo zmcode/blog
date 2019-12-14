@@ -20,7 +20,7 @@
                 </li>
             </ul>
         </nav>
-      <div class="searchWrap" v-if="type === 'topic'">
+      <!-- <div class="searchWrap" v-if="type === 'topic'">
         <Input 
           placeholder="搜索速记" 
           icon="md-search" 
@@ -28,7 +28,7 @@
           @on-click='searchShortList'
           v-model="searchValue"
         />
-      </div>
+      </div> -->
       </div>
     </div>  
   </div>

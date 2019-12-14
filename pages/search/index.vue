@@ -185,7 +185,7 @@ export default {
           hasNextPage,
           total,
           loading: false,
-          keyword: query.topic,
+          keyword: query.type,
           isArticle: false,
           requestType: 'type',
           typeName: '代码'
