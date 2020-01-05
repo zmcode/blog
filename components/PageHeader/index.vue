@@ -60,6 +60,7 @@
 
 <script>
 /*eslint-disable no-prototype-builtins */
+import { getUserId } from '../../axios/api/common'
 import { mapState } from 'vuex'
 import PageMenu from '../PageMenu/index'
 import DropList from '../../components/dropList/index'
@@ -68,6 +69,7 @@ import Modal from '../myModal/index'
 export default {
     data () {
         return {
+            userId: '',
             searchValue: '',
             showModal: false,
             userDropData: [
@@ -85,7 +87,7 @@ export default {
                     line: true,
                 },
                 {
-                    path: '',
+                    path: '/home:id',
                     icon: 'md-person',
                     name: '我的主页',
                     id: 'article',
@@ -125,17 +127,17 @@ export default {
         showLayoutModal(name) {
             name = name.replace(/\s*/g,'')
             if (name === '登出') {
-                this.showModal = true
+              this.showModal = true
             }
             if(name === '我的主页') {
                 this.$router.replace({
-                    path: `/home/${this.userInfo.id}`
+                  path: `/home/${this.userId}`
                 })
             }
         },
         goLogin() {
             this.$store.dispatch('login/handleClearLoginOut').then(() => {
-                this.$router.replace('/login')
+              this.$router.replace('/login')
             })
         },
         hiddenModal() {
@@ -147,11 +149,12 @@ export default {
                 return
             }
             this.$router.push(`/search?${this.searchType}=${this.searchValue}`)
-        }
+        },
     },
     computed: {
         ...mapState({
-            userInfo: state => state.login.userInfo
+            userInfo: state => state.login.userInfo,
+            UserToken: state => state.login.UserToken
         })
     },
     watch: {
@@ -169,6 +172,15 @@ export default {
         //    path === '/shorthand' || query.hasOwnProperty('topic') ? this.searchType = 'topic' : this.searchType = 'q'
            this.searchValue = ''
         }
+    },
+    mounted () {
+       getUserId({
+        token: this.UserToken
+      })
+      .then(res => {
+        if (res.code === 200)
+        this.userId = res.id
+      })
     }
 }
 </script>

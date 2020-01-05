@@ -122,6 +122,14 @@ export default {
                     value: 'Node',
                     label: 'Node'
                 },
+                {
+                    value: 'TypeScript',
+                    label: 'TypeScript'
+                },
+                {
+                    value: 'Flutter',
+                    label: 'Flutter'
+                },
             ]
         }
     },
@@ -277,6 +285,7 @@ export default {
   .v-note-wrapper {
       z-index: 0;
       min-height: 500px;
+      max-height: 500px;
   }
   /deep/.hljs {
       span {

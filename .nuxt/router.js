@@ -3,9 +3,9 @@ import Router from 'vue-router'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
+const _d8507038 = () => interopDefault(import('..\\pages\\codeshare\\index.vue' /* webpackChunkName: "pages_codeshare_index" */))
 const _980e44de = () => interopDefault(import('..\\pages\\contribute\\index.vue' /* webpackChunkName: "pages_contribute_index" */))
 const _1b93ba16 = () => interopDefault(import('..\\pages\\draft\\index.vue' /* webpackChunkName: "pages_draft_index" */))
-const _e5b69ace = () => interopDefault(import('..\\pages\\essay\\index.vue' /* webpackChunkName: "pages_essay_index" */))
 const _4c767fa6 = () => interopDefault(import('..\\pages\\login\\index.vue' /* webpackChunkName: "pages_login_index" */))
 const _267a5d76 = () => interopDefault(import('..\\pages\\search\\index.vue' /* webpackChunkName: "pages_search_index" */))
 const _19059d6b = () => interopDefault(import('..\\pages\\shorthand\\index.vue' /* webpackChunkName: "pages_shorthand_index" */))
@@ -27,6 +27,10 @@ export const routerOptions = {
   scrollBehavior,
 
   routes: [{
+    path: "/codeshare",
+    component: _d8507038,
+    name: "codeshare"
+  }, {
     path: "/contribute",
     component: _980e44de,
     name: "contribute"
@@ -34,10 +38,6 @@ export const routerOptions = {
     path: "/draft",
     component: _1b93ba16,
     name: "draft"
-  }, {
-    path: "/essay",
-    component: _e5b69ace,
-    name: "essay"
   }, {
     path: "/login",
     component: _4c767fa6,

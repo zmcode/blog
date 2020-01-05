@@ -59,10 +59,10 @@ export default {
                     id: 'shorthand',
                 },
                 {
-                    path: '/essay',
+                    path: '/codeshare',
                     icon: 'md-code',
                     name: '代码分享',
-                    id: 'essay'
+                    id: 'codeshare'
                 },
                 // {
                 //     path: '',

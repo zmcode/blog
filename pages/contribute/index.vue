@@ -76,6 +76,14 @@ export default {
             value: 'Node',
             label: 'Node'
         },
+         {
+          value: 'TypeScript',
+          label: 'TypeScript'
+        },
+        {
+          value: 'Flutter',
+          label: 'Flutter'
+        },
       ],
       // 权限类型
       // powerSelect: [

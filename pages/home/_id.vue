@@ -11,7 +11,7 @@
             </div>
           </div>
           <div class="userSetting">
-            <myButton to='/setting/person' v-if="userInfo.id === userID">编辑个人资料</myButton>
+            <myButton to='/setting/person' v-if="userInfo.id === userId">编辑个人资料</myButton>
           </div>
         </div>
         <div class="articleWrap">
@@ -21,13 +21,13 @@
                 :item='item' 
                 :key='index'
                 @getArticleList='clearList'
-                :showHandle='userInfo.id === userID'
+                :showHandle='userInfo.id === userId'
               >
               </articleList>
             </div>
             <Skeleton v-show="loading"/>
             <div v-if="listData.length === 0 && !loading" class="noArticle">
-              <p>{{ userInfo.id === userID ? '你' : 'TA' }}很懒,什么也没写</p>
+              <p>{{ userInfo.id === userId ? '你' : 'TA' }}很懒,什么也没写</p>
             </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
 import { mapState } from 'vuex'
 import articleList from '../../components/articleList'
 import Skeleton from '../../components/Skeleton'
-import { userArticle } from '../../axios/api/common'
+import { userArticle, getUserId } from '../../axios/api/common'
 import myButton from '../../components/Button'
 import { otherInfo } from '../../axios/api/common'
 import contentLayout from '../../components/contentLayout'
@@ -71,6 +71,7 @@ export default {
       loading: true,
       nextPage: 1,
       hasNextPage: false,
+      userId: ''
     }
   },
   layout: 'blog',
@@ -95,6 +96,13 @@ export default {
     // 获取用户文章信息
     this.getArticle([])
     window.addEventListener('scroll', this.handleScroll)
+    getUserId({
+      token: this.UserToken
+    })
+      .then(res => {
+        if (res.code === 200)
+        this.userId = res.id
+      })
   }, 
   methods: {
     getArticle(list= []) {
@@ -139,7 +147,8 @@ export default {
   computed: {
     ...mapState({
       // 获取当前登录账号的id,跟当前页面的id进行对比,以确定是否显示编辑
-      userID: state => state.login.userInfo.id
+      // userID: state => state.login.userInfo.id,
+      UserToken: state => state.login.UserToken
     })
   },
   beforeDestroy() {

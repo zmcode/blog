@@ -75,3 +75,14 @@ export const GetRecordSelect = params => {
         params
     )
 }
+
+// 获取用户id
+export const getUserId = params => {
+    return axiosTool.httpServer(
+        {
+            url: '/user/id',
+            method: 'post'
+        },
+        params
+    )
+}
