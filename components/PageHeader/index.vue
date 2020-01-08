@@ -162,7 +162,7 @@ export default {
             if(path === '/shorthand' || query.hasOwnProperty('topic')) {
                 this.searchType = 'topic'
                 this.searchName = '速记'
-            } else if(path === '/essay' || query.hasOwnProperty('type')) {
+            } else if(path === '/codeshare' || query.hasOwnProperty('type')) {
                 this.searchType = 'type'
                 this.searchName = '代码'
             } else {
