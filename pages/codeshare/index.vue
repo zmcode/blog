@@ -74,7 +74,7 @@ export default {
 <style lang="less" scoped>
 .pageWrap {
   text-align: center;
-  /deep/.ivu-page-prev, /deep/.ivu-page-next,  /deep/.ivu-page-item {
+  ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
     background: rgba(0, 0, 0, 0);
   }
 }

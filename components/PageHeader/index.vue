@@ -6,7 +6,7 @@
                         <h1>
                             遥近
                         </h1>
-                        <span>做不一样的博客平台</span>
+                        <span>不一样的博客平台</span>
                     </a>
                 </div>
                 <div class="Content">
@@ -246,7 +246,7 @@ export default {
                     align-items: center;
                     margin-right: 40px;
                     .ivu-input-wrapper {
-                        /deep/ .ivu-input {
+                        ::v-deep .ivu-input {
                             height: 40px;
                             line-height: 40px;
                             font-size: 14px;
@@ -263,7 +263,7 @@ export default {
                             }
                         }
 
-                        /deep/ .ivu-icon {
+                        ::v-deep .ivu-icon {
                             height: 40px;
                             width: 40px;
                             line-height: 40px;
@@ -329,7 +329,7 @@ export default {
 </style>
 <style lang="less">
  .ivu-input-wrapper {
-    /deep/ .ivu-input {
+    ::v-deep .ivu-input {
         height: 40px;
         line-height: 40px;
         font-size: 14px;
@@ -346,7 +346,7 @@ export default {
         }
     }
 
-    /deep/ .ivu-icon {
+    ::v-deep .ivu-icon {
         height: 40px;
         width: 40px;
         line-height: 40px;

@@ -123,7 +123,7 @@ console.log('\n%c遥近博客%c 1.01版本 2019-12-08 \n', 'color: #fadfa3; back
        height: 100%;
        object-fit: cover;
      }
-     /deep/.ivu-carousel-list {
+     ::v-deep.ivu-carousel-list {
        border-radius: 10px;
      }
    }

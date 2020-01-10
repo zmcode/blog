@@ -4,7 +4,7 @@
             <textarea 
                 placeholder="输入标题..." 
                 spellcheck="false" 
-                maxlength="20" 
+                maxlength="30" 
                 rows="1" 
                 class="title-input"
                 v-model='title'
@@ -12,7 +12,7 @@
             </textarea>
         </div>
         <div class="mavonEditor">
-            <no-ssr>
+            <client-only>
                 <mavon-editor  
                     v-model="source"
                     placeholder='目前仅支持MakeDown语法, 创作完成, 点击右下方按钮发布'
@@ -21,7 +21,7 @@
                     :toolbars='toolbars'
                    @change='changeValue'
                 />
-            </no-ssr>
+            </client-only>
         </div>
         <div class="ArticleSet">
             <myButton 
@@ -212,9 +212,7 @@ export default {
         // 如果有id,那么就是编辑进来的
         this.draftId = this.$route.query.draftId
         if(this.draftId) {
-            articleDetail({
-            id: this.draftId 
-        })
+            articleDetail({id: this.draftId}, { isDraft: 1 })
             .then(res => {
                 if(res.code === 200)
                 this.source =  res.data.source
@@ -287,7 +285,7 @@ export default {
       min-height: 500px;
       max-height: 500px;
   }
-  /deep/.hljs {
+  ::v-deep.hljs {
       span {
           font-family: SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
       }
