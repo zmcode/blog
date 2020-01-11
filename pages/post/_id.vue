@@ -25,7 +25,7 @@
   <div class="title-panel">
     <div class="catalog-body"> 
       <ul class="catalog-list">
-        <catelog :catalogData='catalogData' :num='1'></catelog>
+        <catelog :catalogData='catalogData' :num='1' :activeTop='activeTop' :changeTop='changeTop' :wrapTop='wrapTop'></catelog>
       </ul>
     </div>
   </div>
@@ -41,7 +41,9 @@ export default {
     return {
       currName: ['h1', 'h2', 'h3'],
       catalogData: [],
-      aIndex: 0
+      activeTop: 0,
+      wrapTop: 0,
+      ScrollMap: ''
     }
   },
   layout: 'blog',
@@ -57,7 +59,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      // 获取所有el元素 (v-show-content)
+      // 获取所有el元素 
       const AllElNode = [...document.getElementsByClassName('content')[0].childNodes].filter(item => {
           return item.nodeType === 1
       })
@@ -65,29 +67,30 @@ export default {
       const titleNode = AllElNode.filter(item => {
         return this.currName.includes(item.tagName.toLocaleLowerCase())
       })
-      console.log(titleNode)
       if (titleNode.length <= 0) return
+      // 获取包裹区域距离顶部的距离
+      const wrapTop = this.getElementToPageTop(titleNode[0].parentElement.offsetTop, titleNode[0].offsetParent)
       // 给元素加自定义属性
       titleNode.forEach((item, index) => {
-        console.log(item)
-        item.setAttribute('id', `header-${item.innerText}`)
         if (index === 0) {
           item.style = 'padding-top: 60px; margin-top: -40px'
         } else {
           item.style = 'padding-top: 80px; margin-top: -40px'
         }
+        // 先设置属性,在添加id
+        item.setAttribute('id', `header-${ item.offsetTop + wrapTop }`)
       })
-      console.log(titleNode)
-      // 获取包裹区域距离顶部的距离
-      const wrapTop = this.getElementToPageTop(titleNode[0].parentElement.offsetTop, titleNode[0].parentElement)
-      console.log(wrapTop)
+
       // 初始化数据结构
       const initialize = [{
         titleLev: parseInt(titleNode[0].tagName.slice(1)),
         name: titleNode[0].innerText,
         offsetTop: titleNode[0].offsetTop + wrapTop,
-        children: []
+        children: [],
+        itemTop: titleNode[0].offsetTop
       }]
+      var ScrollData = []
+      ScrollData.push(initialize[0].offsetTop)
       
       const result = titleNode.slice(1).reduce((prev, curr) => {
         let pervLength = prev.length - 1
@@ -99,13 +102,15 @@ export default {
               titleLev: parseInt(curr.tagName.slice(1)),
               name: curr.innerText,
               offsetTop: curr.offsetTop + wrapTop,
-              children: []
+              children: [],
+              itemTop: curr.offsetTop
             })
+            ScrollData.push(curr.offsetTop + wrapTop)
           } else if (prev[pervLength].children[childLength].titleLev >= parseInt(curr.tagName.slice(1))) {
-            this.pushObj(prev[pervLength], curr, wrapTop, prev)
+            this.pushObj(prev[pervLength], curr, wrapTop, prev, ScrollData)
           }
         } else {
-          this.pushObj(prev[pervLength], curr, wrapTop, prev)
+          this.pushObj(prev[pervLength], curr, wrapTop, prev, ScrollData)
         }
         
         // 没有儿子
@@ -129,33 +134,63 @@ export default {
         return prev
       }, initialize)
       this.catalogData = result
+      this.activeTop = result[0].offsetTop
+      this.wrapTop = wrapTop
+      const handle = (index) => {
+        if (index === ScrollData.length - 1)index = ScrollData.length
+        if(this.activeTop === ScrollData[index]) return
+        this.changeTop(ScrollData[index - 1])
+      }
+      const data = ScrollData.reduce((prev, curr, index) => {
+        if (prev.length <= 0) {
+          prev.push([{pervNum: 0, nextNum: ScrollData[0] - 20, index: 1}, handle])
+        } else {
+          prev.push([{pervNum: ScrollData[index - 1], nextNum: ScrollData[index] - 20, index: index}, handle])
+        }
+        return prev
+      }, [])
+      this.ScrollMap = new Map([...data])
+      window.addEventListener('scroll', () => {
+        [...this.ScrollMap].forEach(([key, value]) => {
+          key.pervNum < document.documentElement.scrollTop 
+          && document.documentElement.scrollTop < key.nextNum 
+          ? value.call(this, key.index) : ''
+        })
+      })
     })
   },
   methods: {
     getElementToPageTop (num, el) {
-      if (el.parentElement) {
-        return this.getElementToPageTop(num + el.parentElement.offsetTop, el.parentElement)
+      if (el.offsetParent) {
+        return this.getElementToPageTop(num + el.parentElement.offsetTop, el.offsetParent)
       } else {
         return num
       }
     },
-    pushObj (arr, next, top, all) {
+    pushObj (arr, next, top, all, ScrollData) {
       if (arr.titleLev < parseInt(next.tagName.slice(1))) {
-          arr.children.push({
-            titleLev: parseInt(next.tagName.slice(1)),
-            name: next.innerText,
-            offsetTop: next.offsetTop + top,
-            children: []
-          })
-        } else if (arr.titleLev >= parseInt(next.tagName.slice(1))) {
-          all.push({
-            titleLev: parseInt(next.tagName.slice(1)),
-            name: next.innerText,
-            offsetTop: next.offsetTop + top,
-            children: []
-          })
-        }
+        arr.children.push({
+          titleLev: parseInt(next.tagName.slice(1)),
+          name: next.innerText,
+          offsetTop: next.offsetTop + top,
+          children: [],
+          itemTop: next.offsetTop
+        })
+        ScrollData.push(next.offsetTop + top)
+      } else if (arr.titleLev >= parseInt(next.tagName.slice(1))) {
+        all.push({
+          titleLev: parseInt(next.tagName.slice(1)),
+          name: next.innerText,
+          offsetTop: next.offsetTop + top,
+          children: [],
+          itemTop: next.offsetTop
+        })
+        ScrollData.push(next.offsetTop + top)
+      }
         return arr
+    },
+    changeTop (top) {
+      this.activeTop = top
     }
   }
 }
@@ -238,6 +273,7 @@ export default {
         margin-top: 40px;
         font-size:16px;
         padding: 15px;
+        position: relative;
         ::v-deep h2 {
             padding-bottom: 12px;
             font-size: 24px;
@@ -255,7 +291,13 @@ export default {
             background: #f8f8f8;
             font-size: 12px;
             border-radius: 6px;
+            ::-webkit-scrollbar {
+                display: none !important
+            }
           }
+        }
+        ::v-deep img {
+         max-width: 100%;
         }
       }
     }
@@ -265,9 +307,21 @@ export default {
     .catalog-body {
       position: fixed;
       margin: 6px 0;
-      overflow: hidden;
+      overflow: scroll;
+      height: 600px;
+      width: 240px;
       .catalog-list {
         position: relative;
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 7px;
+            bottom: 0;
+            width: 2px;
+            background-color: #ebedef;
+            opacity: .5;
+        }
       }
     }
   }
