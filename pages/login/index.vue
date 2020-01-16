@@ -6,7 +6,7 @@
                     <div class="card shadow Noborder CardWelcome" :class="{isShow: WelcomeVisible}">
                         <div class="card-body">
                             <h1 class="card-title">遥近</h1>
-                            <p class="card-message">做不一样博客平台</p>
+                            <p class="card-message">不一样博客平台</p>
                             <div class="btn-wrap">
                                 <a class="btn btnRegiste js-btn" data-target="register" @click='ShowRegister'>注册</a>
                                 <a class="btn btnLogin js-btn" data-target="login" @click='ShowLogin'>登录</a>

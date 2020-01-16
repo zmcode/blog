@@ -119,7 +119,7 @@ export default {
         .then(res => {
           if(res.code === 200)  
           // this.loading = false
-          this.$router.replace('/essay')
+          this.$router.replace('/codeshare')
         })
     },
     changeType(value) {
@@ -133,7 +133,7 @@ export default {
   },
   mounted() {
     if(!this.UserToken) {
-      this.$Message.error('需要登陆才可以分享代码')
+      this.$Message.error('需要登录才可以分享代码')
       this.$router.replace('/login')
     }
   }

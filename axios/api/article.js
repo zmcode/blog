@@ -74,3 +74,69 @@ export const SearchArticle = params => {
         params
     )
 }
+
+// 文章发布评论
+export const puArComment = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/puArComment/${ id }`,
+            method: 'post'
+        },
+        params
+    )
+}
+
+// 文章评论列表
+export const arCommentList = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/commentList/${ id }`,
+            method: 'get'
+        },
+        params
+    )
+}
+
+// 文章是否点赞
+export const arIsLike = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/checklike/${id}`,
+            method: 'get'
+        },
+        params
+    )
+}
+
+// 给文章点赞
+export const LikeArticle = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/${id}/like`,
+            method: 'post'
+        },
+        params
+    )
+}
+
+// 取消文章点赞
+export const remoteLikeAr = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/${id}/like`,
+            method: 'delete'
+        },
+        params
+    )
+}
+
+// 更新文章阅读量
+export const upArRead = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/${id}/upRead`,
+            method: 'post'
+        },
+        params
+    )
+}

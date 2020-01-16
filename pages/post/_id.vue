@@ -1,49 +1,62 @@
 <template>
-<div class="PageWrap">
-  <div class="acticle-panel">
-    <div class="like panel-btn"></div>
-    <div class="comment panel-btn"></div>
-  </div>
-  <div class="ArticleWrap">
-    <div class="ArticleDetail">
-      <h1 style='color: black; text-align: center'>{{ detail.title }}</h1>
-      <div class="authorInfo">
-        <nuxt-link :to="`/home/${detail.user_info.id}`">
-          <img :src="detail.user_info.avatar" >
-        </nuxt-link>
-        <div class="otherInfo">
-          <p class="name">{{detail.user_info.name}}</p>
-          <div class="time">
-            <span>{{ detail.created | dateFormat }}</span>
-            <span style="margin-left: 5px">阅读: {{ detail.review }}</span>
+<div class="pageWrap">
+  <div class="articleSkeleton">
+    <div class="acticle-panel">
+      <div class="like panel-btn" @click="handleLike" :class="{'isLike': isLike}" :badge='detail.praise'></div>
+      <div class="comment panel-btn" @click='changePath' :badge='detail.review'></div>
+    </div>
+    <div class="ArticleWrap">
+      <div class="ArticleDetail">
+        <h1 style='color: black; text-align: center'>{{ detail.title }}</h1>
+        <div class="authorInfo">
+          <nuxt-link :to="`/home/${detail.user_info.id}`">
+            <img :src="detail.user_info.avatar" >
+          </nuxt-link>
+          <div class="otherInfo">
+            <p class='name'>{{detail.user_info.name}}</p>
+            <div class='time'>
+              <span>{{ detail.created | dateFormat }}</span>
+              <span style="margin-left: 5px">阅读: {{ detail.read }}</span>
+            </div>
           </div>
         </div>
+        <div v-html='detail.content' class='content'></div>
+        <p style="text-align: center" class="commentTitle">评论</p>
+        <comment id="comment" :arUserInfo='detail.user_info'></comment>
       </div>
-      <div v-html='detail.content' class="content"></div>
     </div>
-  </div>
-  <div class="title-panel">
-    <div class="catalog-body"> 
-      <ul class="catalog-list">
-        <catelog :catalogData='catalogData' :num='1' :activeTop='activeTop' :changeTop='changeTop' :wrapTop='wrapTop'></catelog>
-      </ul>
+    <div class="title-panel">
+      <div class="catalog-body"> 
+        <ul class="catalog-list">
+          <catelog :catalogData='catalogData' :num='1' :activeTop='activeTop' :changeTop='changeTop' :wrapTop='wrapTop'></catelog>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import { Storage } from '../../assets/untils/assist'
+import comment from '../../components/comment'
 import catelog from '../../components/catelog'
-import { articleDetail } from '../../axios/api/article'
+// LikeArticle, remoteLikeAr
+import { mapState } from 'vuex'
+import { articleDetail, arIsLike, LikeArticle, remoteLikeAr, upArRead } from '../../axios/api/article'
 export default {
-  components: { catelog },
+  components: { catelog, comment },
   data () {
     return {
       currName: ['h1', 'h2', 'h3'],
       catalogData: [],
       activeTop: 0,
       wrapTop: 0,
-      ScrollMap: ''
+      ScrollMap: '',
+      isLike: false,
+      remainTime: 0,
+      hidden: '', // 初始化hidden数值(兼容浏览器)
+      storage: '', // 初始化storage对象
+      visibilityChange: ''
     }
   },
   layout: 'blog',
@@ -57,7 +70,22 @@ export default {
      error({ statusCode: 404, message: '文章不存在' })
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: state => state.login.userInfo
+    })
+  },
   mounted () {
+  this.storage = new Storage()
+  this.handleVisibilityChange()
+  document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false)
+    // 上来检查文章是否给点赞了
+    arIsLike({
+      id: this.$route.params.id
+    })
+      .then(res => {
+        if(res.code === 200) this.isLike = res.data.isPraise
+      })
     this.$nextTick(() => {
       // 获取所有el元素 
       const AllElNode = [...document.getElementsByClassName('content')[0].childNodes].filter(item => {
@@ -160,6 +188,44 @@ export default {
     })
   },
   methods: {
+    handleVisibilityChange() {
+      // 初始化可见数据(兼容)
+      if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support 
+        this.hidden = 'hidden'
+        this.visibilityChange = 'visibilitychange'
+      } else if (typeof document.msHidden !== 'undefined') {
+        this.hidden  = 'msHidden'
+        this.visibilityChange = 'msvisibilitychange'
+      } else if (typeof document.webkitHidden !== 'undefined') {
+        this.hidden  = 'webkitHidden'
+        this.visibilityChange = 'webkitvisibilitychange'
+      }
+      if (!document[this.hidden]) {
+        if (!this.storage.get('isSend')) {
+          this.remainTime = 0
+          this.upPageView()
+        } else {
+          return
+        }
+      }
+    },
+    upPageView () {
+      // 每秒钟更新
+      let timer = setInterval(() => {
+        if (document[this.hidden] || this.remainTime >= 60) {
+          clearTimeout(timer)
+          return
+        }
+        if (!document[this.hidden]) this.remainTime += 1
+        // 在页面中停留某个时间发送浏览量更新
+        if (this.remainTime >= 60) {
+          console.log('发送更新')
+          upArRead({ id: this.$route.params.id })
+          // 设置cookie,防止某个时间段多次更新(分钟)
+          this.storage.set('isSend', true, 10)
+        }
+      }, 1000)
+    },
     getElementToPageTop (num, el) {
       if (el.offsetParent) {
         return this.getElementToPageTop(num + el.parentElement.offsetTop, el.offsetParent)
@@ -191,136 +257,242 @@ export default {
     },
     changeTop (top) {
       this.activeTop = top
+    },
+    changePath () {
+      // 清空,让再次点击可以生效
+      window.location.hash = ''
+      window.location.hash = 'comment'
+    },
+    // 操控点赞
+    handleLike () {
+      if (!this.userInfo.id) {
+        this.$Message.error('登录后才可点赞')
+        return
+      }
+      if (this.isLike) {
+        remoteLikeAr ({
+          id: this.$route.params.id
+        })
+          .then(res => {
+            if (res.code === 200) {
+              this.isLike = false
+              this.detail.praise -= 1
+            }
+          })
+      } else {
+        LikeArticle({
+          id: this.$route.params.id
+        })
+          .then(res => {
+            if (res.code === 200) {
+              this.isLike = true
+              this.detail.praise += 1
+            }
+          })
+      }
     }
+  },
+  destroyed () {
+    document.removeEventListener(this.visibilityChange, this.handleVisibilityChange, false)
   }
 }
 </script>
 <style lang="less" scoped>
-.PageWrap {
+.pageWrap {
   position: relative;
   margin: 40px;
   display: block;
   height: auto;
-  overflow: hidden;
-  .acticle-panel {
-    position: fixed;
-    top: 130px;
-    margin-left: 40px;
-    .like {
-      background-image: url(https://img.yjdzm.com/zan.b4bb964.svg);
-      background-position: 53% 46%;
-      animation: tada_4891 3.6s linear infinite;
-      &:hover {
-        background-image: url( https://img.yjdzm.com/zan-hover.91657d6.svg);
-      }
-    }
-    .comment {
-      background-image: url(https://img.yjdzm.com/comment.7fc22c2.svg);
-      background-position: 50% 55%;
-      &:hover {
-        background-image: url(https://img.yjdzm.com/comment-hover.1074e67.svg);
-      }
-    }
-    .panel-btn {
-      position: relative;
-      margin-bottom: .7rem;
-      width: 40px;
-      height: 40px;
-      background-color: #fff;
-      background-repeat: no-repeat;
-      border-radius: 50%;
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,.04);
-      cursor: pointer;
-    }
-  }
-  .ArticleWrap {
+  float: left;
+  .articleSkeleton {
     float: left;
-    max-width: 750px;
-    min-width: 750px;
-    padding: 20px;
-    background: #fff;
-    margin: 0px 50px 0 120px;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
-    border-radius: 12px;
-    .authorInfo {
-      display: flex;
-      img{
+    .acticle-panel {
+      position: fixed;
+      top: 130px;
+      margin-left: 40px;
+      .like {
+        background-image: url(https://img.yjdzm.com/zan.b4bb964.svg);
+        background-position: 53% 46%;
+        animation: tada_4891 3.6s linear infinite;
+        &:hover {
+          background-image: url( https://img.yjdzm.com/zan-hover.91657d6.svg);
+        }
+        &::after {
+          content: attr(badge);
+          position: absolute;
+          top: 0;
+          left: 75%;
+          padding: .1rem .4rem;
+          font-size: 13px;
+          text-align: center;
+          line-height: 1;
+          white-space: nowrap;
+          color: #fff;
+          background-color: #b2bac2;
+          border-radius: .7rem;
+          transform-origin: left top;
+          transform: scale(.75);
+        }
+      }
+      .isLike {
+        background-image:url(http://test.yjdzm.com/zan-active.svg);
+        animation: none;
+        &:hover {
+          background-image:url(http://test.yjdzm.com/zan-active.svg);
+        }
+        &::after {
+          content: attr(badge);
+          position: absolute;
+          top: 0;
+          left: 75%;
+          padding: .1rem .4rem;
+          font-size: 13px;
+          text-align: center;
+          line-height: 1;
+          white-space: nowrap;
+          color: #fff;
+          background-color: #74ca46;
+          border-radius: .7rem;
+          transform-origin: left top;
+          transform: scale(.75);
+        }
+      }
+      .comment {
+        background-image: url(https://img.yjdzm.com/comment.7fc22c2.svg);
+        background-position: 50% 55%;
+        &:hover {
+          background-image: url(https://img.yjdzm.com/comment-hover.1074e67.svg);
+        }
+        &::after {
+          content: attr(badge);
+          position: absolute;
+          top: 0;
+          left: 75%;
+          padding: .1rem .4rem;
+          font-size: 13px;
+          text-align: center;
+          line-height: 1;
+          white-space: nowrap;
+          color: #fff;
+          background-color: #b2bac2;
+          border-radius: .7rem;
+          transform-origin: left top;
+          transform: scale(.75);
+        }
+      }
+      .panel-btn {
+        position: relative;
+        margin-bottom: .7rem;
         width: 40px;
         height: 40px;
+        background-color: #fff;
+        background-repeat: no-repeat;
         border-radius: 50%;
-      }
-      .otherInfo {
-        text-align: left;
-        margin-left: 10px;
-        flex-direction: column;
-        display: flex;
-        align-items: flex-start;
-        color: #909090;
-        font-size: 13px;
-        .name {
-          font-size: 15px;
-          color: #333;
-          font-weight: bold
-        }
-        .time {
-          font-size: 13px;
-          display: flex;
-        }
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.04);
+        cursor: pointer;
       }
     }
-    .ArticleDetail {
-      .content {
-        margin-top: 40px;
-        font-size:16px;
-        padding: 15px;
-        position: relative;
-        ::v-deep h2 {
-            padding-bottom: 12px;
-            font-size: 24px;
-            border-bottom: 1px solid #eaecef;
-            color: black;
-            margin-top: 24px;
-            margin-bottom: 16px;
-        };
-        ::v-deep pre {
-          .hljs {
-            display: block;
-            overflow-x: auto;
-            padding: 01em;
+    .ArticleWrap {
+      float: left;
+      max-width: 750px;
+      min-width: 750px;
+      padding: 20px;
+      background: #fff;
+      margin: 0px 50px 0 120px;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+      border-radius: 12px;
+      .authorInfo {
+        display: flex;
+        img{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+        .otherInfo {
+          text-align: left;
+          margin-left: 10px;
+          flex-direction: column;
+          display: flex;
+          align-items: flex-start;
+          color: #909090;
+          font-size: 13px;
+          .name {
+            font-size: 15px;
             color: #333;
-            background: #f8f8f8;
-            font-size: 12px;
-            border-radius: 6px;
-            ::-webkit-scrollbar {
-                display: none !important
-            }
+            font-weight: bold
+          }
+          .time {
+            font-size: 13px;
+            display: flex;
           }
         }
-        ::v-deep img {
-         max-width: 100%;
+      }
+      .ArticleDetail {
+        .content {
+          margin-top: 40px;
+          font-size:16px;
+          padding: 15px;
+          position: relative;
+          ::v-deep h2 {
+              padding-bottom: 12px;
+              font-size: 24px;
+              border-bottom: 1px solid #eaecef;
+              color: black;
+              margin-top: 24px;
+              margin-bottom: 16px;
+          };
+          ::v-deep pre {
+            .hljs {
+              display: block;
+              overflow-x: auto;
+              padding: 01em;
+              color: #333;
+              background: #f8f8f8;
+              font-size: 12px;
+              border-radius: 6px;
+              ::-webkit-scrollbar {
+                  display: none !important
+              }
+            }
+          }
+          ::v-deep img {
+          max-width: 100%;
+          }
+        }
+        .commentTitle {
+          text-align: center;
+          color: #8a9aa9; 
+          font-size: 18px;
+          font-weight: 600;
+          text-align: center;
+          padding: 1.67rem 0 5px;
+        }
+        #comment {
+          padding-top: 60px;
+          margin-top: -60px
         }
       }
     }
-  }
-  .title-panel {
-    float: left;
-    .catalog-body {
-      position: fixed;
-      margin: 6px 0;
-      overflow: scroll;
-      height: 600px;
-      width: 240px;
-      .catalog-list {
-        position: relative;
-        &:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 7px;
-            bottom: 0;
-            width: 2px;
-            background-color: #ebedef;
-            opacity: .5;
+    .title-panel {
+      float: left;
+      .catalog-body {
+        position: fixed;
+        margin: 6px 0;
+        overflow: scroll;
+        height: 600px;
+        width: 240px;
+        .catalog-list {
+          position: relative;
+          &:before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 7px;
+              bottom: 0;
+              width: 2px;
+              background-color: #ebedef;
+              opacity: .5;
+          }
         }
       }
     }

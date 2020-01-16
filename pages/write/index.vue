@@ -226,7 +226,7 @@ export default {
     },
     mounted() {
         if(!this.UserToken) {
-            this.$Message.error('需要登陆才可以发布文章')
+            this.$Message.error('需要登录才可以发布文章')
             this.$router.replace('/login')
         }
     }

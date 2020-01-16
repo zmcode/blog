@@ -107,7 +107,7 @@ export default {
     },
   },
   mounted() {
-console.log('\n%c遥近博客%c 1.2版本 2020-01-04 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
+console.log('\n%c遥近博客%c 1.2版本 2020-01-16 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
   }
 }
 </script>
