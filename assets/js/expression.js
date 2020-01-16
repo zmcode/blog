@@ -1,7 +1,6 @@
 let baseUrl = ''
 
-process.env.NODE_ENV === 'production' ? baseUrl = 'https://www.yjdzm.com/' : baseUrl = 'http://test.yjdzm.com/'
-console.log(baseUrl)
+process.env.NODE_ENV === 'production' ? baseUrl = 'https://img.yjdzm.com/' : baseUrl = 'http://test.yjdzm.com/'
 export const expressionUrl = {
   tieba: {
     name: '贴吧表情',
