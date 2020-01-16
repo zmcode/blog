@@ -42,11 +42,11 @@
     </div> -->
     <div v-if="!userInfo.avatar" class="noUser">
       <div class="comment-clear">
-        <p>创作不易, 赶紧登录参与评论, 给作者点评!</p>
+        <p>创作不易, 登录给作者点评下吧!</p>
         <nuxt-link to='/login' class="login-btn">
         登录
       </nuxt-link>
-      <img src="http://test.yjdzm.com/wendaovip/shuai.gif" alt="">
+      <img :src="`${baseUrl}/wendaovip/shuai.gif`" alt="">
       </div>
     </div>
     <contentEdit 
@@ -166,6 +166,7 @@ export default {
       expressionSelect: false,
       allComment: [],
       subCommentIndex: null,
+      baseUrl: process.env.VUE_APP_IMG
     }
   },
   components: { contentEdit },
@@ -190,7 +191,7 @@ export default {
     })
   },
   mounted () {
-    console.log(this.userInfo === false)
+
     arCommentList({ id: this.$route.params.id })
       .then(res => {
         this.allComment = res.data.list

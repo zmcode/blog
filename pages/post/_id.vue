@@ -43,6 +43,7 @@ import catelog from '../../components/catelog'
 // LikeArticle, remoteLikeAr
 import { mapState } from 'vuex'
 import { articleDetail, arIsLike, LikeArticle, remoteLikeAr, upArRead } from '../../axios/api/article'
+import { getUserId } from '../../axios/api/common'
 export default {
   components: { catelog, comment },
   data () {
@@ -54,9 +55,11 @@ export default {
       ScrollMap: '',
       isLike: false,
       remainTime: 0,
-      hidden: '', // 初始化hidden数值(兼容浏览器)
+      hidden: '', // hidden名称(兼容浏览器)
       storage: '', // 初始化storage对象
-      visibilityChange: ''
+      visibilityChange: '', // 页面切换事件名称(兼容浏览器)
+      timer: '', // 定时器标识
+      loginUserId: ''
     }
   },
   layout: 'blog',
@@ -72,13 +75,23 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.login.userInfo
+      userInfo: state => state.login.userInfo,
+      UserToken: state => state.login.UserToken
     })
   },
   mounted () {
+  getUserId({
+    token: this.UserToken
+  })
+    .then(res => {
+      if (res.code === 200) {
+        this.loginUserId = res.id
+        this.handleVisibilityChange()
+        document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false)
+      }
+      
+    })
   this.storage = new Storage()
-  this.handleVisibilityChange()
-  document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false)
     // 上来检查文章是否给点赞了
     arIsLike({
       id: this.$route.params.id
@@ -201,7 +214,7 @@ export default {
         this.visibilityChange = 'webkitvisibilitychange'
       }
       if (!document[this.hidden]) {
-        if (!this.storage.get('isSend')) {
+        if (this.loginUserId !== this.detail.user_info.id) {
           this.remainTime = 0
           this.upPageView()
         } else {
@@ -211,18 +224,31 @@ export default {
     },
     upPageView () {
       // 每秒钟更新
-      let timer = setInterval(() => {
+      this.timer = setInterval(() => {
         if (document[this.hidden] || this.remainTime >= 60) {
-          clearTimeout(timer)
+          clearTimeout(this.timer)
           return
         }
         if (!document[this.hidden]) this.remainTime += 1
         // 在页面中停留某个时间发送浏览量更新
         if (this.remainTime >= 60) {
-          console.log('发送更新')
-          upArRead({ id: this.$route.params.id })
           // 设置cookie,防止某个时间段多次更新(分钟)
-          this.storage.set('isSend', true, 10)
+          let arr = this.storage.get('articleReaded')
+          if (!arr) arr = []
+          const hasSame = arr.some(item => {
+            return item.id === this.$route.params.id && item.userId === this.userInfo.id
+          })
+          if (!hasSame) {
+            arr.push({ 
+              id: this.$route.params.id, 
+              expires: Date.now() + 1000 * 60 * 10,
+              userId: this.userInfo.id
+            })
+            this.storage.set('articleReaded', arr)
+            upArRead({ id: this.$route.params.id })
+          } else {
+            return
+          }
         }
       }, 1000)
     },
@@ -293,6 +319,7 @@ export default {
     }
   },
   destroyed () {
+    clearTimeout(this.timer)
     document.removeEventListener(this.visibilityChange, this.handleVisibilityChange, false)
   }
 }

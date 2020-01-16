@@ -10,52 +10,37 @@ export function oneOf (value, validList) {
  // 封装localstorage
  export class Storage {
     constructor(props) {
-      console.log(props)
       this.props = props || {}
       this.source = this.props.source || window.localStorage
       this.initRun()
     }
     initRun () {
-      const reg = new RegExp('__expires__')
       let data = this.source
-      let list = Object.keys(data)
-      if (list.length > 0) {
-        list.map(key => {
-          if (!reg.test(key)) {
-            let now = Date.now()
-            let expires = data[`${key}__expires__`] || Date.now + 1
-            if (now >= expires ) {
-              this.remove(key)
-            }
+      let now = Date.now()
+      let datas = data['articleReaded']
+      if (datas) {
+        Array.from(JSON.parse(datas)).forEach((item, index) => {
+          if (now > item.expires) {
+            this.remove(index)
           }
-          return key
         })
       }
     }
     get(key) {
-      const source = this.source,
-      expired = source[`${key}__expires__`] || Date.now + 1
-      const now = Date.now()
-      if ( now >= expired ) {
-        this.remove(key)
-        return
-      }
+      const source = this.source
       const value = source[key] ? JSON.parse(source[key]) : source[key]
       return value
     }
-    set(key, value, expired) {
+    set(key, value) {
       let source = this.source
       source[key] = JSON.stringify(value)
-      if (expired) {
-          source[`${key}__expires__`] = Date.now() + 1000*60 * expired
-      }
-      return value
     }
-    remove(key) {
-      const data = this.source,
-       value = data[key]
-      delete data[key]
-      delete data[`${key}__expires__`]
-      return value
+    remove(index) {
+      const data = this.source
+      let datas = data['articleReaded']
+      const newArr = Array.from(JSON.parse(datas)).filter((item, now) => {
+        return now !== index
+      })
+      data['articleReaded'] = JSON.stringify(newArr)
     }
   }

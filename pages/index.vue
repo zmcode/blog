@@ -77,6 +77,7 @@
       <p>2019-12-08: 代码分享第一版上线, 优化了速记粘贴代码显示样式的问题, 网站seo优化(1.1)</p><br>
       <p>2019-12-27: 修复低版本浏览器无法注册登录的问题(1.11)</p><br>
       <p>2020-01-04: 紧急修复可以随意修改用户文章的bug, 修复不登陆无法查看主页的问题, 优化了用户的体验(1.12)</p><br>
+      <p>2020-01-16: 添加了评论、点赞、统计阅读量功能(1.2)</p><br>
     </Modal>
   </div>
 </template>
@@ -107,7 +108,7 @@ export default {
     },
   },
   mounted() {
-console.log('\n%c遥近博客%c 1.2版本 2020-01-16 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
+    console.log('\n%c遥近博客%c 1.2版本 2020-01-16 \n', 'color: #fadfa3; background: #030307; padding:5px;', 'background: #fadfa3; padding:5px 0;')
   }
 }
 </script>

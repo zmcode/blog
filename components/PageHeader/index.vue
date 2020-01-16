@@ -174,6 +174,7 @@ export default {
         }
     },
     mounted () {
+        // 可有可无, home已经做了限制,这了为了提高体验
        getUserId({
         token: this.UserToken
       })
