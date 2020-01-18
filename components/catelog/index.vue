@@ -102,12 +102,14 @@ export default {
         padding-left: 36px;
         &:before {
           left: 24px;
+          margin: 4px 0;
         }
       }
     }
     &.d3 {
       a {
         padding-left: 51px;
+        margin: 4px 0;
         &:before {
           left: 39px;
         }

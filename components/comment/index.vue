@@ -58,6 +58,7 @@
       @handle='handleShowSend'
       v-if='userInfo.avatar'
       :clearSubComment='clearSubComment'
+      :noFocus='true'
     >
     </contentEdit>
     <div class="comment-list">

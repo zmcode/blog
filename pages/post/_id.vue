@@ -236,13 +236,12 @@ export default {
           let arr = this.storage.get('articleReaded')
           if (!arr) arr = []
           const hasSame = arr.some(item => {
-            return item.id === this.$route.params.id && item.userId === this.userInfo.id
+            return item.id === this.$route.params.id && item.userId
           })
           if (!hasSame) {
             arr.push({ 
               id: this.$route.params.id, 
-              expires: Date.now() + 1000 * 60 * 10,
-              userId: this.userInfo.id
+              expires: Date.now() + 1000 * 60 * 10
             })
             this.storage.set('articleReaded', arr)
             upArRead({ id: this.$route.params.id })
@@ -293,6 +292,10 @@ export default {
     handleLike () {
       if (!this.userInfo.id) {
         this.$Message.error('登录后才可点赞')
+        return
+      }
+      if (this.loginUserId === this.detail.user_info.id) {
+        this.$Message.error('不能给自己点赞哦!')
         return
       }
       if (this.isLike) {
@@ -362,10 +365,10 @@ export default {
         }
       }
       .isLike {
-        background-image:url(http://test.yjdzm.com/zan-active.svg);
+        background-image:url(https://img.yjdzm.com/zan-active.svg);
         animation: none;
         &:hover {
-          background-image:url(http://test.yjdzm.com/zan-active.svg);
+          background-image:url(https://img.yjdzm.com/zan-active.svg);
         }
         &::after {
           content: attr(badge);

@@ -76,10 +76,18 @@ export default {
       type: Boolean,
       default: false
     },
-    parentId: [String]
+    parentId: [String],
+    noFocus: {
+      type: Boolean,
+      default:false
+    }
   },
   methods:{
     comment () {
+      if (!this.$refs.richInput.innerHTML) {
+        this.$Message.error('评论内容不能为空')
+        return
+      }
       // 添加评论
       puArComment(
         { id: this.$route.params.id }, 
@@ -155,7 +163,7 @@ export default {
     }
   },
   mounted () {
-    this.$refs.richInput.focus()
+    if (!this.noFocus) this.$refs.richInput.focus()
     this.$refs.richInput.addEventListener('paste', (e) => {
       e.stopPropagation()
       e.preventDefault()

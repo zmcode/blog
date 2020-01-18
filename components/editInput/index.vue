@@ -64,8 +64,15 @@ export default {
     },
     save() {
       if(this.inputVal.length > 20) {
-        this.$Message.error('名称要在20个字符以内')
+        this.$Message.error('不能大于20个字符')
         return
+      }
+      if (this.name === 'name' && !this.inputVal) {
+        this.$Message.error('名字不能为空')
+        return
+      }
+      if (this.name === 'summary' && !this.inputVal) {
+        this.inputVal= ' '
       }
       UserInfoUpdata({
         field: this.name,
@@ -76,7 +83,7 @@ export default {
           this.$store.commit('login/changeUserInfo', { userInfo: res.data })
           UserInfo()
         } else {
-          this.$Message.error('该名称已存在')
+          this.$Message.error('名称已存在')
         }
       })
     },
