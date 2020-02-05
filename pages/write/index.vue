@@ -43,10 +43,26 @@
             okText='确定发布'
             cancleText='存草稿'
         >
-            <p>选择文章分类</p>
+            <p class="ItemTitle">选择文章分类</p>
              <Select v-model="language" style="width:200px">
                 <Option v-for="item in SelectData" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
+            <p class="ItemTitle">文章封面</p>
+             <Upload 
+                        :action="`${baseUrl}/upload`"
+                        :data="{ dir: 'cover/'}"
+                        :show-upload-list='false'
+                        :before-upload='checkFile'
+                        :on-success='upLoadsuccess'
+                        :disabled='loading'
+                        :headers='header'
+                        :accept="`${uploadType.join(',')}`"
+                    >
+                        <div class="upload-img" :style="{'background': 'url(' + coverUrl+ ')'}">   
+
+
+                        </div>
+                    </Upload>
             <template slot="footer">
                <myButton :loading='loading' @click='publish("online")'>确定发布</myButton>
                <myButton :loading='loading'  @click='publish("draft")'>存草稿</myButton>
@@ -64,6 +80,9 @@ export default {
     layout: 'blog',
     data() {
         return {
+            baseUrl: process.env.VUE_APP_API,
+            uploadType: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
+            coverUrl: '',
             draftId: '',
             source: '',
             content: '',
@@ -134,6 +153,24 @@ export default {
         }
     },
     methods: {
+        upLoadsuccess(response) {
+            this.loading = false
+            if(response.code === 200) {
+                // 更新用户数据
+              this.coverUrl = response.data.url
+            }     
+        },
+        checkFile(event) {
+            this.loading = true
+            const result = this.uploadType.some(item => {
+                return item === event.type && event.size / 1024 / 1024 <= 2
+            })
+            if (!result) {
+                this.$Message.error('文件格式有误或过大')
+                this.loading = false
+                return false
+            }
+        },
         // 添加图片函数
          $imgAdd(pos, $file){
            let formdata = new FormData()
@@ -163,7 +200,8 @@ export default {
                 content: this.content,
                 category: this.language,
                 title: this.title,
-                status: status
+                status: status,
+                cover: this.coverUrl
             }
             if(this.draftId) {
                 editArticle({ id: this.draftId }, ArticleInfo)
@@ -207,6 +245,11 @@ export default {
         ...mapState({
             UserToken: state => state.login.UserToken
         }),
+        header(){
+            return {
+                'Authorization': 'Bearer' + ' ' + this.UserToken
+            }
+        }
     },
     created() {
         // 如果有id,那么就是编辑进来的
@@ -220,6 +263,7 @@ export default {
                 this.language = res.data.category
                 this.content = res.data.content
                 this.status = res.data.status
+                this.coverUrl = res.data.cover
             })
         }
         
@@ -241,7 +285,7 @@ export default {
             margin: 0;
             padding: 0;
             font-size: 32px;
-            font-weight: 700;
+            // font-weight: 700;
             color: #000;
             border: none;
             outline: none;
@@ -290,5 +334,22 @@ export default {
           font-family: SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
       }
   }
+}
+.upload-img {
+    background: #fff;
+    border: 1px dashed #dcdee2;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    background-repeat: no-repeat !important;
+    background-size: cover !important
+}
+.ItemTitle {
+    margin: 10px 0
 }
 </style>

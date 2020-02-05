@@ -40,111 +40,54 @@
         </div>
       </div>
     </div> -->
-    <div v-if="!userInfo.avatar" class="noUser">
+    <div v-if="!UserToken" class="noUser">
       <div class="comment-clear">
         <p>创作不易, 登录给作者点评下吧!</p>
-        <nuxt-link to='/login' class="login-btn">
+      <nuxt-link to='/login' class="login-btn">
         登录
       </nuxt-link>
       <img :src="`${baseUrl}/wendaovip/shuai.gif`" alt="">
       </div>
     </div>
-    <contentEdit 
+    <contentEdit
       :userInfo='userInfo' 
       :arUserID='arUserInfo.id' 
       :blurHidden='true' 
       :isShowAcitonBox='isShowAcitonBox'
       :replyUserInfo='arUserInfo'
       @handle='handleShowSend'
-      v-if='userInfo.avatar'
+      v-if='UserToken'
       :clearSubComment='clearSubComment'
       :noFocus='true'
+      :articleId='articleId'
+      :changeReviewNum='changeReviewNum'
+      :reviewNum='reviewNum'
     >
     </contentEdit>
-    <div class="comment-list">
-      <div class="item" v-for="(item, index) in allComment" :key="index">
-        <div class="comment">
-          <div class="user-avatar">
-            <nuxt-link :to="`/home/${ item.userInfo.id }`">
-              <div :style="{'background': 'url(' + item.userInfo.avatar+ ')'}"></div>
-            </nuxt-link>
-          </div>
-          <div class="content-box">
-            <div class="meta-box">
-              {{item.userInfo.name}}
-            </div>
-            <div class="content" v-html="item.content">
-            </div>
-            <div class="reply">
-              <div class="time">{{ item.created | dateFormat }}</div>
-              <div class="action-box" @click='showSubComment(item._id)' v-if="userInfo.avatar">
-                <Icon type="ios-undo" size='13'/>
-                <span>回复</span>
-              </div>
-            </div>
-            <div class="comment-form-reply">
-              <contentEdit 
-                :isShowAvavtar='false' 
-                :userInfo='userInfo' 
-                v-if='subCommentIndex === item._id'
-                :arUserID='arUserInfo.id'
-                :clearSubComment='clearSubComment'
-                :isShowAcitonBox='true'
-                :replyUserInfo='item.userInfo'
-                :parentId='item._id'
-              ></contentEdit>
-            </div>
-            <div class="sub-comment-list" v-if="item.topComment.length > 0">
-              <div class="item" v-for="(item, index) in item.topComment" :key="index">
-                <div class="sub-comment">
-                  <div class="sub-comment-row">
-                    <div class="sub-comment-content-row">
-                      <div class="sub-comment-content-box">
-                        <div class="sub-user-avatar">
-                          <nuxt-link :to="`/home/${item.userInfo.id}`">
-                            <div :style="{'background': 'url(' + item.userInfo.avatar+ ')'}"></div>
-                          </nuxt-link>
-                        </div>
-                        <div class="sub-user-content-box">
-                          <div class="sub-user-name">
-                            {{ item.userInfo.name }}
-                          </div>
-                          <div class="sub-user-content">
-                            <span class="sub-user-conetent-reply-text">回复</span>
-                            <div class="replyUserName">
-                              <nuxt-link :to="`/home/${ item.respUserInfo.id }`">{{item.respUserInfo.name}}: </nuxt-link>
-                            </div>
-                            <span class="replyContent" v-html="item.content"></span>
-                          </div>
-                          <div class="sub-user-reply-box">
-                            <div class="sub-time">{{ item.created | dateFormat }}</div>
-                            <div class="sub-action-box"  @click='showSubComment(item._id)' v-if="userInfo.avatar">
-                              <Icon type="ios-undo" size='13'/>
-                              <span >回复</span>
-                            </div>
-                          </div>
-                          <contentEdit 
-                            :isShowAvavtar='false' 
-                            :userInfo='userInfo' 
-                            color='#fff' 
-                            v-if='subCommentIndex === item._id'
-                            :arUserID='arUserInfo.id'
-                            :clearSubComment='clearSubComment'
-                            :isShowAcitonBox='true'
-                            :replyUserInfo='item.userInfo'
-                            :parentId='item.parent_id'
-                          ></contentEdit>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div v-if="show"> 
+      <commentList 
+      :commentItem="item" 
+      :subCommentIndex="subCommentIndex" 
+      :showSubComment="showSubComment"
+      :UserToken="UserToken"
+      :userInfo='userInfo' 
+      v-for='(item, index) in allComment'
+      :key="index"
+      :itemIndex="index"
+      :arUserInfo='arUserInfo'
+      :clearSubComment='clearSubComment'
+      :changeCommentList="changeCommentList"
+      :commentParentId="item._id"
+      :loginUserId="loginUserId"
+      :articleId='articleId'
+      :changeReviewNum='changeReviewNum'
+      :reviewNum='reviewNum'
+    >
+    </commentList>
     </div>
+    <div v-else class="loading">加载评论中.....</div>
+    <div v-if="allComment.length <= 0 && show" class="noCommentBox">暂无评论</div>
+    <span class="more" v-if="hasNextPage && show" @click="getmoreComment"> {{loading ? '加载中...' : '查看更多 > '}} </span>
   </div>
 </template>
 
@@ -155,23 +98,47 @@ import { expressionUrl } from '../../assets/js/expression'
 // import Button from '../../components/Button'
 import { arCommentList } from '../../axios/api/article'
 import contentEdit from '../../components/contentEdit'
+import commentList from '../../components/commentList'
+// import subCommentList from '../../components/subCommentList'
 export default {
   props: {
-    arUserInfo: [Object]
+    arUserInfo: [Object],
+    loginUserId: [String],
+    articleId: [String],
+    changeReviewNum: [Function],
+    reviewNum: [Number]
   },
   data () {
     return {
-      isShowAcitonBox: false,
-      commentValue: '',
+      isShowAcitonBox: false, // 是否显示评论表情区域
+      commentValue: '', // 评论内容
       expressionUrl: expressionUrl,
       expressionSelect: false,
       allComment: [],
       subCommentIndex: null,
-      baseUrl: process.env.VUE_APP_IMG
+      baseUrl: process.env.VUE_APP_IMG,
+      TopCommentIndex: -1, // 是否显示二级评论
+      topCommentListData: [], // 二级评论数据
+      hasNextPage: false, // 是否还有一级评论
+      loading: false, // 加载评论中
+      next: null,
+      show: false
     }
   },
-  components: { contentEdit },
+  components: { contentEdit, commentList },
   methods: {
+    changeCommentList () {
+      this.show = false
+      arCommentList({ id: this.$route.params.id })
+          .then(res => {
+            setTimeout(() => {
+              this.allComment = res.data.list
+              this.hasNextPage = res.data.hasNextPage
+              this.next = res.data.next
+              this.show = true
+            }, 500)
+          })
+    },
     showSubComment (id) {
       this.subCommentIndex = id
     },
@@ -182,20 +149,39 @@ export default {
     handleShowSend (value) {
       this.isShowAcitonBox = value
     },
-    changeCommentList (data) {
-      this.allComment = data
+    getmoreComment () {
+      this.loading = true
+      if(this.next) {
+        arCommentList({ id: this.$route.params.id }, {page: this.next})
+          .then(res => {
+            if (res.code === 200) {
+              setTimeout(() => {
+                this.allComment = this.allComment.concat(res.data.list)
+                this.hasNextPage = res.data.hasNextPage
+                this.next = res.data.next
+                this.loading = false
+              }, 500)
+            }
+          })
+      }
     }
   },
   computed: {
     ...mapState({
-      userInfo: state => state.login.userInfo
+      userInfo: state => state.login.userInfo,
+      UserToken: state => state.login.UserToken
     })
   },
   mounted () {
 
     arCommentList({ id: this.$route.params.id })
       .then(res => {
-        this.allComment = res.data.list
+        setTimeout(() => {
+          this.allComment = res.data.list
+          this.hasNextPage = res.data.hasNextPage
+          this.next = res.data.next
+          this.show = true
+        }, 500)
       })
   }
 }
@@ -219,7 +205,7 @@ export default {
         font-size: 16px;
         color: black;
         line-height: 40px;
-        font-weight: 600;
+        // font-weight: 600;
       }
       .login-btn {
         float: right;
@@ -243,7 +229,7 @@ export default {
         width: 100px;
         padding: 10px 0;
         border-radius: 5px;
-        font-weight: bold;
+        // font-weight: bold;
         &:hover {
           background-color: #e2e6ea;
         }
@@ -256,209 +242,19 @@ export default {
       }
     }
   }
-  .comment-list {
-    margin: 0 1.666rem 0 4.85rem;
-    .item {
-      margin-bottom: 1.333rem;
-      .comment {
-        display: flex;
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          display: inline;
-          a {
-            text-decoration: none;
-            cursor: pointer;
-            color: #909090;
-            flex: 0 0 auto;
-            width: 100%;
-            display: inline-block;
-            height: 100%;
-            div {
-              margin: 0 1rem 0 0;
-              width: 40px;
-              height: 40px;
-              display: inline-block;
-              border-radius: 50%;
-              position: relative;
-              background-position: 50%;
-              background-size: cover !important;
-              background-repeat: no-repeat !important;
-              background-color: #eee !important;
-            }
-          }
-        }
-        .content-box {
-          margin-left: .833rem;
-          flex: 1 1 auto;
-          border-bottom: 1px solid #f1f1f1;
-          .meta-box {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            line-height: 1.2;
-            white-space: nowrap;
-            font-weight: 700;
-            margin-top: 5px;
-          }
-          .content {
-            margin-top: .55rem;
-            font-size: 16px;
-            line-height: 1.833rem;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-            word-break: break-all;
-            color: #505050;
-            ::v-deep img {
-              max-width: 40px;
-              max-height: 40px; 
-            }
-          }
-          .reply {
-            display: flex;
-            margin: 1rem 0;
-            font-weight: 400;
-            justify-content: space-between;
-            align-items: center;
-            .time {
-              font-size: 13px;
-              color: #8a9aa9;
-              cursor: default;
-            }
-            .action-box {
-              display: flex;
-              align-items: center;
-              cursor: pointer;
-              font-size: 13px;
-              color: #8a93a0; 
-              &:hover {
-                opacity: 0.8;
-              }
-              span {
-                margin-left:5px
-              }
-            }
-          }
-          .sub-comment-list {
-            margin: 1rem 0;
-            padding: 0 0 0 1rem;
-            background-color: #fafbfc;
-            border-radius: 3px;
-            .item {
-              .sub-comment {
-                position: relative;
-                padding: 1rem 0 0;
-                .sub-comment-row {
-                  display: flex;
-                  align-items: flex-start;
-                  .sub-comment-content-row {
-                    display: flex;
-                    width: 100%;
-                    .sub-comment-content-box {
-                      display: flex;
-                      width: 100%;
-                      .sub-user-avatar {
-                        width: 35px;
-                        height: 35px;
-                         a {
-                          text-decoration: none;
-                          cursor: pointer;
-                          color: #909090;
-                          flex: 0 0 auto;
-                          width: 100%;
-                          display: inline-block;
-                          height: 100%;
-                          div {
-                            margin: 0 1rem 0 0;
-                            width: 35px;
-                            height: 35px;
-                            display: inline-block;
-                            border-radius: 50%;
-                            position: relative;
-                            background-position: 50%;
-                            background-size: cover !important;
-                            background-repeat: no-repeat !important;
-                            background-color: #eee !important;
-                          }
-                        }
-                      }
-                      .sub-user-content-box {
-                        margin-left: .833rem;
-                        margin-right: 1rem;
-                        padding-bottom: 12px;
-                        font-size: 1.083rem;
-                        color: #17181a;
-                        width: 100%;
-                        border-bottom: 1px solid #f1f1f1;
-                        .sub-user-name {
-                          display: flex;
-                          align-items: center;
-                          font-size: 16px;
-                          line-height: 1.2;
-                          white-space: nowrap;
-                          font-weight: 700;
-                          margin-top: 5px;
-                        }
-                        .sub-user-content {
-                          display: inline-block;
-                          margin-top: .5rem;
-                          .sub-user-conetent-reply-text {
-                            color: #17181a;
-                            font-size: 13px
-                          }
-                          .replyUserName {
-                            display: inline-block;
-                            a {
-                              color: #406599;
-                              font-weight: 400;
-                              font-size: 14px
-                            }
-                          }
-                          .replyContent {
-                            white-space: pre-wrap;
-                            color: #505050;
-                            line-height: 1.833rem;
-                            ::v-deep img {
-                              max-width: 40px;
-                              max-height: 40px;
-                            }
-                          }
-                        }
-                        .sub-user-reply-box {
-                          display: flex;
-                          margin-top: 7px;
-                          font-size: 13px;
-                          color: #8a93a0;
-                          justify-content: space-between;
-                          .sub-time {
-                            font-size: 12px;
-                            color: #8a93a0;
-                          }
-                          .sub-action-box {
-                            flex: 0 0 auto;
-                            display: flex;
-                            font-size: 12px;
-                            color: #8a93a0;
-                            user-select: none;
-                            align-items: center;
-                            cursor: pointer;
-                            &:hover {
-                              opacity: 0.8;
-                            }
-                            span {
-                              margin-left: 5px
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+  .loading, .noCommentBox {
+    text-align: center;
+    // font-weight: bold
+
+  }
+  .more {
+    font-size: 14px;
+    width: 100%;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
     }
   }
 }

@@ -3,7 +3,7 @@
   <div class="articleSkeleton">
     <div class="acticle-panel">
       <div class="like panel-btn" @click="handleLike" :class="{'isLike': isLike}" :badge='detail.praise'></div>
-      <div class="comment panel-btn" @click='changePath' :badge='detail.review'></div>
+      <div class="comment panel-btn" @click='changePath' :badge='reviewNum'></div>
     </div>
     <div class="ArticleWrap">
       <div class="ArticleDetail">
@@ -16,13 +16,16 @@
             <p class='name'>{{detail.user_info.name}}</p>
             <div class='time'>
               <span>{{ detail.created | dateFormat }}</span>
-              <span style="margin-left: 5px">阅读: {{ detail.read }}</span>
+              <span style="margin: 0 6px">阅读: {{ detail.read }}</span>
+              <nuxt-link :to="`/write?draftId=${detail._id}`" class="draftIdBox" v-if="loginUserId === detail.user_info.id">
+                编辑
+              </nuxt-link>
             </div>
           </div>
         </div>
         <div v-html='detail.content' class='content'></div>
         <p style="text-align: center" class="commentTitle">评论</p>
-        <comment id="comment" :arUserInfo='detail.user_info'></comment>
+        <comment id="comment" :arUserInfo='detail.user_info' :loginUserId='loginUserId' :articleId='detail._id' :changeReviewNum='changeReviewNum' :reviewNum='reviewNum'></comment>
       </div>
     </div>
     <div class="title-panel">
@@ -59,7 +62,8 @@ export default {
       storage: '', // 初始化storage对象
       visibilityChange: '', // 页面切换事件名称(兼容浏览器)
       timer: '', // 定时器标识
-      loginUserId: ''
+      loginUserId: '',
+      reviewNum: 0
     }
   },
   layout: 'blog',
@@ -80,6 +84,7 @@ export default {
     })
   },
   mounted () {
+    this.reviewNum = this.detail.review
   getUserId({
     token: this.UserToken
   })
@@ -319,6 +324,9 @@ export default {
             }
           })
       }
+    },
+    changeReviewNum (value) {
+      this.reviewNum = value
     }
   },
   destroyed () {
@@ -449,7 +457,7 @@ export default {
           .name {
             font-size: 15px;
             color: #333;
-            font-weight: bold
+            // font-weight: bold
           }
           .time {
             font-size: 13px;
@@ -463,6 +471,20 @@ export default {
           font-size:16px;
           padding: 15px;
           position: relative;
+          ::v-deep p {
+            word-break: break-all;
+            color: #333;
+          }
+          ::v-deep span {
+            // font-weight: normal;
+            font-family: 'Consolas' !important
+          }
+          ::v-deep h1 {
+              color: black;
+              padding-bottom: 10px;
+              border-bottom: 1px solid #eaecef;
+              margin-bottom: 10px;
+          }
           ::v-deep h2 {
               padding-bottom: 12px;
               font-size: 24px;
@@ -488,12 +510,15 @@ export default {
           ::v-deep img {
           max-width: 100%;
           }
+          ::v-deep ol {
+            margin-left: 20px;
+          }
         }
         .commentTitle {
           text-align: center;
           color: #8a9aa9; 
           font-size: 18px;
-          font-weight: 600;
+          // font-weight: 600;
           text-align: center;
           padding: 1.67rem 0 5px;
         }

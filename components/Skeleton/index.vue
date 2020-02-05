@@ -15,7 +15,6 @@ export default {
 
 <style lang="less" scoped>
 .articleSkeleton {
-  margin-top: 20px;
   padding: 20px;
   background-color: #fff;
   border-radius: 0 0 .2rem .2rem;

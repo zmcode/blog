@@ -1,18 +1,22 @@
 <template>
 <div>
+<div v-if='topic && !this.LoginUserId' class="cateBox">
+  <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span> 的速记
+</div>
 <contentLayout>
   <div slot='main'>
-    <div class="publishWrap">
+    <!-- <div class="publishWrap" v-if='UserToken'>
       <div class="content">
         <div class="textWrap" >
             <div class="textCard"> 
                  <div 
-                  contenteditable="plaintext-only" 
+                  contenteditable="true" 
                   class="Richedit" 
-                  ref="text"
-                  placeholder='快速记录你遇到的问题或者分享你的小技巧,请不要上传代码'
+                  ref="richInput"
                   :class="[{ empty: value }]"
+                  :placeholder='placeholderVis'
                   @input="changeValue($event)"
+                  spellcheck="false"
                  >
               </div>
             </div>
@@ -32,6 +36,12 @@
       </div>
       <div class="toolWrap">
         <div class="tool">
+          <expressionBox  
+            :expressionSelect='expressionSelect'
+            :changeShow='changeShow'
+            :addExpressions='addExpressions'
+            style="margin-right: 10px"
+          ></expressionBox>
           <Upload 
             :action="`${baseUrl}/upload`"
             :data="{ dir: 'image/'}"
@@ -58,9 +68,23 @@
         </div>
       <myButton type='success' @click='publish'>发布</myButton>
       </div>
+    </div> -->
+    <shorthandInput :getShortHandList='getShortHandList'></shorthandInput>
+    <div v-if='topic && this.LoginUserId' style="padding-bottom: 10px">
+      <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span> 的速记
     </div>
-    <shorthandList :source='listData'/>
-    <Skeleton v-if='loading' />
+    <shorthandList 
+    :source='listData' 
+    :LoginUserId='LoginUserId' 
+    :changeEditVis="changeEditVis" 
+    :changeItemData="changeItemData"
+    :getShortHandList="getShortHandList"
+     v-if="!loading"/>
+    <div class="pageWrap">
+      <Page size="small" :total='total' :pageSize='5' @on-change='getMoreList' v-if="total && !loading" :current="currentPage"/>
+    </div>
+    <shorthandEdit :getShortHandList="getShortHandList" :isShowEdit='isShowEdit'  :changeEditVis="changeEditVis" :itemData="itemData"></shorthandEdit>
+    <loadingBox :loading='loading' />
     <div class="NoList" v-if='listData.length === 0 && !loading'>
        <p>当前没有内容</p>
     </div>
@@ -69,7 +93,7 @@
     <sideList :source='topicData' :path='path'></sideList>
   </div>
 </contentLayout>
-<Modal
+<!-- <Modal
   title='提示'
   :visible='showModal'
   :mask='true'
@@ -78,7 +102,7 @@
   okText='去登陆'
 >
     <p>检测到你没有登录账号或者账号验证过期,需要登陆才可以发布速记</p>
-</Modal>
+</Modal> -->
 </div>
 
 </template>
@@ -86,59 +110,40 @@
 <script>
 /*eslint-disable no-useless-escape */
 import shorthandList from '../../components/shorthandList'
-import Skeleton from '../../components/Skeleton'
-import { publishShortHand, ShortHandList } from '../../axios/api/shorthand'
-import { GetRecordSelect } from '../../axios/api/common'
+// import Skeleton from '../../components/Skeleton'
+import { ShortHandList } from '../../axios/api/shorthand'
+import { GetRecordSelect, getUserId } from '../../axios/api/common'
 import sideList from '../../components/sideList'
-import DropList from '../../components/dropList/index'
-import DropListItem from '../../components/dropList/dropListItem'
 import { mapState } from 'vuex'
-import { upload } from '../../axios/api/common'
-import myButton from '../../components/Button'
 import contentLayout  from '../../components/contentLayout'
-import Modal from '../../components/myModal'
+import shorthandInput from '../../components/ShorthandInput'
+import shorthandEdit from '../../components/shorthandEdit'
+import loadingBox from '../../components/loadingBox'
 export default {
   layout: 'blog',
   components: {
     contentLayout,
-    myButton,
-    DropList,
-    DropListItem,
     sideList,
-    Skeleton,
+    // Skeleton,
     shorthandList,
-    Modal
+    shorthandInput,
+    shorthandEdit,
+    loadingBox
   },
   data() {
     return {
       showModal:false,
-      baseUrl: process.env.VUE_APP_API,
       path: '/shorthand',
-      topic: '', // 默认的主题
-      value: '',
-      defaultTopic: '摸鱼/生活',
-      imgUrlData: [],
-      uploadType: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
-      selectData: [
-        {
-          name: '摸鱼/生活'
-        },
-        {
-          name: 'bug/踩坑'
-        },
-        {
-          name: '技巧/资源'
-        },
-        {
-          name: '笔记/记录'
-        }
-      ] // 先创建,后期删除
+      LoginUserId: '',
+      isShowEdit: false,
+      itemData: {},
+      topic: ''
     }
   },
   async asyncData({ query, error }) {
     try {
-      const { data: { list, hasNextPage, next, } } = await ShortHandList({
-            topic: query.topic
+      const { data: { list, hasNextPage, next, total, currentPage } } = await ShortHandList({
+        topic: query.topic
       })
       const { data } = await GetRecordSelect()
       return {
@@ -146,138 +151,63 @@ export default {
         hasNextPage: hasNextPage,
         nextPage: next,
         loading: false,
-        topicData: data
+        topicData: data,
+        total,
+        currentPage
       }
     } catch {
      error({ statusCode: 404 })
     }
   },
   methods: {
-    // 监听value变化
-    changeValue(e) {
-      if(!this.UserToken) {
-        this.showModal = true
-        return
-      }
-      this.value = e.target.innerText.replace(/<[\/\s]*(?:(?!div|br)[^>]*)>/g,'')
-    },
-    // 删除图片后删除对应的地址数组
-    deleteImg(index) {
-      this.imgUrlData.splice(index, 1)
-    },
-    // 上传照片成功后增加地址数组
-    upLoadsuccess(response) {
-      this.loading = false
-      if(response.code === 200) {
-         this.imgUrlData.push(response.data.url)
-      }
-    },
-    // 改变类型
-    changeTopic (name) {
-      name = name.replace(/\s*/g,'')
-      this.topic = name
-      this.showSelect = false
-    },
-    // 发布
-    publish() {
-      if(!this.value && this.imgUrlData.length === 0) {
-        this.$Message.error('不能发布空内容')
-        return
-      } 
-      let ShortHandInfo = {
-        content: this.value,
-        topic: this.topic || this.defaultTopic,
-        status: 'online',
-        imgData: this.imgUrlData
-      }
-      publishShortHand(ShortHandInfo)
-        .then(res => {
-          if(res.code === 200)
-          this.$Message.success('发布成功')
-          this.imgUrlData = []
-          this.value = ''
-          this.$refs.text.innerText = ''
-          this.loading = true
-          this.nextPage = 1
-          this.topic = ''
-          this.getShortHandList([])
-        })
-    },
     // 获取文章的列表
-    getShortHandList(list= []) {
+    getShortHandList(page, topic) {
       this.loading = true
       ShortHandList({
-        page: this.nextPage,
-        topic: this.topic
+        page: page || this.nextPage,
+        topic: topic || this.topic
       })
         .then(res => {
-          if(res.code === 200)
-          setTimeout(() => {
-            this.loading = false
+          if(res.code === 200) {
             this.nextPage = res.data.next
             this.hasNextPage = res.data.hasNextPage
-            this.listData = list.concat(res.data.list)
-          }, 500)
+            this.listData = res.data.list
+            this.currentPage = res.data.currentPage
+            this.total = res.data.total
+            console.log(this.total)
+            setTimeout(() => {
+              this.loading = false
+            }, 500)
+          }
         })
-    },
-    // 滚动请求
-     handleScroll() {
-        // 变量scrollTop是滚动条滚动时，距离顶部的距离
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        //变量windowHeight是可视区的高度
-        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        //变量scrollHeight是滚动条的总高度
-        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        //滚动条到底部的条件
-        if(scrollTop + windowHeight > scrollHeight - 1){
-          if(this.loading)return
-          if(!this.hasNextPage)return
-          this.getShortHandList(this.listData)
-        } 
     },
     goLogin() {
       this.$router.replace('/login')
+    },
+    changeEditVis (value) {
+      this.isShowEdit = value
+    },
+    changeItemData (data) {
+      this.itemData = data
+    },
+    getMoreList (value) {
+      this.getShortHandList(value)
     }
-
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    let _this = this
-    // 设置粘贴上传图片
-    this.$refs.text.addEventListener('paste', function (event) { 
-      var items = (event.clipboardData || window.clipboardData).items
-      var file = null
-      if (items && items.length) {
-        // 检索剪切板items
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf('image') !== -1) {  
-                file = items[i].getAsFile()
-                break
-            } else {
-              return 
-            }
-        }
-      }
-      var formData = new FormData()
-      formData.append('file', file)
-      upload(formData)
-        .then(res => {
-          _this.imgUrlData.push(res.data.url)
-        })
+    getUserId({
+      token: this.UserToken
     })
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
+      .then(res => {
+        if (res.code === 200) {
+          this.LoginUserId = res.id
+        }
+      })
   },
   computed: {
         ...mapState({
           UserToken: state => state.login.UserToken
         }),
-        header(){
-          return {
-            'Authorization': 'Bearer' + ' ' + this.UserToken
-          }
-        },
          ...mapState({
           userInfo: state => state.login.userInfo
         })
@@ -287,7 +217,7 @@ export default {
         this.listData = []
         this.nextPage = 1
         this.topic = query.topic || ''
-        this.getShortHandList(this.listData)
+        this.getShortHandList(1,this.topic)
       }
     }
 }
@@ -295,11 +225,11 @@ export default {
 
 <style lang="less" scoped>
 .publishWrap {
-    margin-top: 20px;
     padding: 1.333rem 1.666rem 0;
     background: #fff;
     position: relative;
     border-radius: 2px;
+    margin-bottom: 20px;
   .content {
     position: relative;
     border-radius: 2px;
@@ -332,6 +262,10 @@ export default {
              &:after {
               display: none;
             }
+          }
+          ::v-deep img{
+            max-width: 40px;
+            max-height: 40px;
           }
         }
       }
@@ -427,10 +361,20 @@ export default {
     }
   }
 }
+.cateBox {
+  padding: 20px 20px 0 20px;
+}
 .NoList {
   background: #fff;
   padding: 20px;
   margin-top: 20px;
   text-align: center;
+}
+.pageWrap {
+  margin-top: 20px;
+  text-align: center;
+  ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
+    background: rgba(0, 0, 0, 0);
+  }
 }
 </style>

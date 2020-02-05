@@ -15,6 +15,10 @@ import '..\\assets\\css\\app.css'
 
 import '..\\assets\\css\\input.less'
 
+import '..\\assets\\css\\svg.css'
+
+import '..\\assets\\css\\font.css'
+
 import '..\\node_modules\\codemirror\\lib\\codemirror.css'
 
 import '..\\node_modules\\codemirror\\addon\\merge\\merge.css'

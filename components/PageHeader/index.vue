@@ -125,6 +125,7 @@ export default {
     },
     methods: {
         showLayoutModal(name) {
+            console.log(name)
             name = name.replace(/\s*/g,'')
             if (name === '登出') {
               this.showModal = true
@@ -275,15 +276,26 @@ export default {
                 }
 
                 .LoginBtn {
-                    display: block;
-                    margin-left: 20px;
-                    height: 40px;
-                    width: 80px;
-                    line-height: 40px;
+                     display: inline-block;
+                    padding: 11px 6px;
+                    line-height: 15px;
+                    letter-spacing: 1px;
+                    font-size: 15px;
                     text-align: center;
+                    white-space: nowrap;
+                    vertical-align: middle;
+                    cursor: pointer;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    border: none;
+                    color: rgba(0, 0, 0, 0.65);
+                    background-color: #fff;
                     border: 1.5px solid #e2e6ea;
-                    border-radius: 20px;
-                    color: rgba(0, 0, 0, .65);
+                    width: 80px;
+                    border-radius: 10px;
+                    // font-weight: bold;
                     &:hover {
                         background-color: #e2e6ea;
                     }

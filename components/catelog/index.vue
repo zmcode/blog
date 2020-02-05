@@ -56,11 +56,12 @@ export default {
     padding: 0;
     list-style: none;
     color: #333;
-    font-weight: 400;
+    // font-weight: 400;
+    padding: 5px 0;
     a {
       display: block;
       position: relative;
-      padding: 4px 0 4px 12px;
+      padding: 0px 0 0px 12px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -68,6 +69,7 @@ export default {
       text-decoration: none;
       cursor: pointer;
       border-radius: 6px;
+      font-size: 13px;
       &:before {
         content: "";
         position: absolute;
@@ -79,32 +81,38 @@ export default {
         background-color: currentColor;
         border-radius: 50%;
       }
-      &:hover {
-        background-color: #ebedef;
-      }
     }
     &.d1 {
-      font-weight: 600;
+      // font-weight: 600;
       color: #000;
        > a {
-        margin: 6px 0;
-        padding: 4px 0 4px 21px;
+        padding: 0px 0 0px 21px;
         &:before {
           left: 5px;
           margin-top: -3px;
           width: 6px;
           height: 6px;
         }
+        &:hover {
+          > a {
+            color: #007fff;
+          }
+        }
       }
+      
     }
     &.d2 {
       a {
         padding-left: 36px;
         &:before {
           left: 24px;
-          margin: 4px 0;
         }
       }
+      &:hover {
+          > a {
+            color: #007fff;
+          }
+        }
     }
     &.d3 {
       a {
@@ -114,6 +122,11 @@ export default {
           left: 39px;
         }
       }
+      &:hover {
+          > a {
+            color: #007fff;
+          }
+        }
     }
     .sub-list {
       margin: 0;
@@ -123,7 +136,6 @@ export default {
     &.active {
       > a {
         color: #007fff;
-        background-color: #ebedef;
       }
     }
   }

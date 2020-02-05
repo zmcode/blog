@@ -61,7 +61,7 @@ export default {
                 {
                     path: '/codeshare',
                     icon: 'md-code',
-                    name: '代码分享',
+                    name: '片段',
                     id: 'codeshare'
                 },
                 // {
@@ -109,7 +109,7 @@ export default {
         line-height: normal;
         border-radius: 10px;
         .nuxt-link-active {
-            background: #e2e6ea;
+            background: #eee;
             border-radius: 10px;
         }
         &:hover {

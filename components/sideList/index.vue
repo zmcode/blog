@@ -4,19 +4,18 @@
       <div style="position:fixed">
          <nav class="sideWrap">
             <ul class="ContentWrap">
-                <p>分类</p>
-                <li class="sideItem">
+                <h3 class="title"> <Icon type="ios-folder-open-outline" :size="22" style="margin-right: 10px;"/>分类</h3>
+                <!-- <li class="sideItem">
                     <myButton :active="0 === active" @click='CateGoryArticle(-1, "")'>
                         全部
                     </myButton>
-                </li>
-                <li class="sideItem" v-for="(item, index) in source" :key='index'>
-                    <myButton 
-                      :active="index + 1 === active" 
-                      @click='CateGoryArticle(index, item.name)'
-                    >
+                </li> -->
+                <li class="sideItem" v-for="(item, index) in source" :key='index'  @click='CateGoryArticle(index, item.name)'>
+                    <myButton >
+                      <Icon type="ios-paper-outline" />
                       {{ item.name }}
-                    </myButton> 
+                    </myButton>
+                    <span class="num">{{item.count}}</span>
                 </li>
             </ul>
         </nav>
@@ -39,7 +38,7 @@ import myButton from '../../components/Button'
 export default {
   data() {
     return {
-      active: 0,
+      active: -1,
       type: '',
       searchValue: '',
       showSearch: true
@@ -61,7 +60,7 @@ export default {
   },
   methods: {
     CateGoryArticle(index, name) {
-      this.active = index + 1
+      this.active = index
       // 点击的时候,改变样式,并且改变路由,从而触发再次请求对应的数据
       this.$router.push({
         path: `${this.path}?${this.type}=${name}`
@@ -79,11 +78,10 @@ export default {
 
 <style lang="less" scoped>
 .utilWrap {
-  margin-top: 20px;
   width: 150px;
   .sideWrap {
+    min-width: 210px;
     // position: fixed;
-    max-width: 150px;
     border-radius: 0.2rem;
     background-color: #fff;
     transition: all 0.2s linear;
@@ -91,15 +89,46 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
-      text-align: center;
+      // text-align: center;
       padding: 20px;
+      .title {
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        color: #666;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+      }
       .sideItem {
+        width: 100%;
         height: 30px;
-        font-size: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0 10px;
+        font-size: 13px;
+        // display: flex;
+        // align-items: center;
+        padding: 0 5px;
+        &.active {
+          .my-btn {
+              color:#777
+          }
+        }
+        cursor: pointer;
+          &:hover {
+            .my-btn {
+                color:#777
+            }
+        }
+        .num {
+          float: right;
+          background-color: #eee;
+          color: #666;
+          padding: 1px 6px;
+          font-size: 12px;
+          border-radius: 2px
+        }
+        .my-btn {
+          color: #333;
+          padding: 0;
+        }
       }
     }
   }

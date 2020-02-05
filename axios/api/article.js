@@ -140,3 +140,24 @@ export const upArRead = ({ id }, params) => {
         params
     )
 }
+
+export const topCommentList = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/topComment/${id}`,
+            method: 'get'
+        },
+        params
+    )
+}
+
+// 删除评论
+export const deleteCom = ({ id }, params) => {
+    return axiosTool.httpServer(
+        {
+            url: `/article/deleteCom/${ id }`,
+            method: 'delete'
+        },
+        params
+    )
+}

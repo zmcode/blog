@@ -48,7 +48,7 @@ const httpServer = (opts, data) => {
     }
 
     // 区分post或者get
-    if (httpOptions.method === 'get') {
+    if (httpOptions.method === 'get' || httpOptions.method === 'delete') {
         httpOptions.params = data
     } else {
         httpOptions.data = data

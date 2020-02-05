@@ -12,6 +12,7 @@ module.exports = {
     //强制不使用分号结尾
     semi: ["error", "never"],
     "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }],
+    "no-mixed-spaces-and-tabs": [0]
   },
   parserOptions: {
     parser: "babel-eslint"

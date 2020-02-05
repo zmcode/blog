@@ -105,7 +105,7 @@ export default {
     justify-content: space-between;
     .title {
       font-size: 16px;
-      font-weight: bold;
+      // font-weight: bold;
       color:black;
     }
     .copyIcon {
@@ -155,6 +155,10 @@ export default {
     padding: 0;
     margin: 5px 0;
     background: #fff;
+    ::v-deep span {
+      // font-weight: normal;
+      font-family: 'Consolas'
+    }
   }
 }
 </style>

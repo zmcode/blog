@@ -320,7 +320,7 @@ export default {
                         .card-title {
                             user-select: none;
                             margin-bottom: .75rem;
-                            font-weight: bold;
+                            // font-weight: bold;
                             font-size: 1.8rem;
                         }
                         .card-message {
@@ -358,7 +358,7 @@ export default {
                               cursor: pointer;
                               font-size: 1rem;
                               display: inline-block;
-                              font-weight: 400;
+                              // font-weight: 400;
                               color:black;
                               width: 10em;
                               border-radius: 20px;
@@ -418,7 +418,7 @@ export default {
                     &:hover {
                           background-color: #fff;
                           color: black !important;
-                          font-weight: bold;
+                          // font-weight: bold;
                           border: 2px solid black;
                     }
                   }
@@ -438,11 +438,11 @@ export default {
                       &:hover {
                         background-color: #fff;
                         color: black;
-                        font-weight: bold;
+                        // font-weight: bold;
                       }
                       .RegisterIcon {
                         color: #495057;
-                        font-weight: bold;
+                        // font-weight: bold;
                       }
                   }
                 }
@@ -470,7 +470,7 @@ export default {
                      &:hover {
                         background-color: #fff;
                         color: black !important;
-                        font-weight: bold;
+                        // font-weight: bold;
                         border: 2px solid #393e46cc;
                     }
                   }
@@ -489,14 +489,14 @@ export default {
                       transition: .4s;
                       &:hover {
                         background-color: #fff;
-                        font-weight: bold;
+                        // font-weight: bold;
                         & > .LoginIcon {
                           color: black;
                         }
                       }
                       .LoginIcon {
                         color: white;
-                        font-weight: bold;
+                        // font-weight: bold;
                       }
                   }
                 }

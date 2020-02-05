@@ -1,16 +1,25 @@
 <template>
   <div>
+    <div v-if='activeName' class="cateBox">
+      <nuxt-link to='/learn/article' class="cateBox-link">文章</nuxt-link> / 分类为 <span style="color: red">{{activeName}}</span> 的文章
+    </div>
     <contentLayout>
-      <template slot="main">
+      <template slot="main" >
+        <div v-if="!loading">
         <articleList 
           v-for='(item, index) in listData' 
           :item='item' 
           :key='index'
         />
-        <Skeleton v-if="loading"/>
+        </div>
+        <!-- <Skeleton v-if="loading"/> -->
+        <loadingBox :loading='loading'></loadingBox>
         <div class="noArticle" v-if="!loading && listData.length === 0"> 
           <p>目前没有文章哦</p>
         </div>
+      <div class="pageWrap">
+        <Page size="small" :total='total' :pageSize='5' @on-change='getMoreList' v-if="total && !loading" :current="currentPage"/>
+      </div>
       </template>
       <template slot="side">
         <sideList :source='categoryData' :path='path'>
@@ -23,9 +32,10 @@
 
 <script>
 import sideList from '../../../components/sideList'
-import Skeleton from '../../../components/Skeleton'
+// import Skeleton from '../../../components/Skeleton'
 import articleList from '../../../components/articleList'
 import contentLayout from '../../../components/contentLayout'
+import loadingBox from '../../../components/loadingBox'
 export default {
   data() {
     return {
@@ -38,10 +48,31 @@ export default {
   components: {
     contentLayout,
     articleList,
-    Skeleton,
-    sideList
+    // Skeleton,
+    sideList,
+    loadingBox
   },
   methods: {
+    getMoreList (value) {
+      this.loading = true
+      this.$store.dispatch('article/getArticle', {
+            pageSize: 5,
+            page: value,
+            category: this.activeName
+          })
+            .then(res => {
+              if(res.code === 200)
+                setTimeout(() => {
+                this.loading = false
+                this.nextPage = res.data.next
+                this.hasNextPage = res.data.hasNextPage
+                this.listData = res.data.list
+                this.total = res.data.total
+                this.currentPage = res.data.currentPage
+                }, 500)
+                document.documentElement.scrollTop = 0
+            })
+    },
     // CateGoryArticle(index, name) {
     //   this.listData = []
     //   this.active = index + 1
@@ -50,20 +81,6 @@ export default {
     //     path: `/learn/article?category=${name}`
     //   })
     // },
-    handleScroll() {
-        // 变量scrollTop是滚动条滚动时，距离顶部的距离
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        //变量windowHeight是可视区的高度
-        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        //变量scrollHeight是滚动条的总高度
-        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        //滚动条到底部的条件
-        if(scrollTop + windowHeight > scrollHeight - 1){
-          if(this.loading)return
-          if(!this.hasNextPage)return
-          this.getListData(this.listData)
-        } 
-    },
     getListData(list) {
       this.loading = true
           this.$store.dispatch('article/getArticle', {
@@ -84,6 +101,7 @@ export default {
   async asyncData({ store, query }) {
     const categoryData = await store.dispatch('category/getCateGory')
     const { data } = await store.dispatch('article/getArticle', {
+      pageSize: 5,
       category: query.category
     })
     return {
@@ -92,18 +110,20 @@ export default {
       hasNextPage: data.hasNextPage,
       nextPage: data.next,
       loading: false,
-      activeName: query.category || ''
+      activeName: query.category || '',
+      total: data.total,
+      currentPage: data.currentPage
     }
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll)
+    // window.addEventListener('scroll', this.handleScroll)
   },
   watch: {
     $route({ query }) {
       this.listData = []
       this.nextPage = 1
       this.activeName = query.category || ''
-      this.getListData(this.listData)
+      this.getMoreList(1)
     }
   },
   beforeDestroy() {
@@ -117,6 +137,27 @@ export default {
   padding: 20px;
   background: #fff;
   text-align: center;
+}
+.pageWrap {
   margin-top: 20px;
+  text-align: center;
+  // ::v-deep .ivu-page {
+  //   .ivu-page-item {
+  //     a {
+  //       color: #666
+  //     }
+  //     &:hover {
+  //       a {
+  //         color: black
+  //       }
+  //     }
+  //   }
+  // }
+  ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
+    background: rgba(0, 0, 0, 0);
+  }
+}
+.cateBox {
+  padding: 20px 20px 0 20px;
 }
 </style>

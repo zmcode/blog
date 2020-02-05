@@ -11,8 +11,8 @@
     <li 
         v-for="(item, index) in source" 
         :key="index" class="ListItem" 
-        :class="{splitLine: item.line}"
-        @click='handleClick'
+        :class="{splitLine: item.line}" 
+        @click='handleClick($event)'
     >
         <component
             :is="item.a ? 'a' : 'nuxt-link'"
@@ -45,6 +45,10 @@ export default {
             this.$parent.$emit('on-click', name)
         }
     },
+    mounted () {
+        console.log(this.source)
+    }
+
 
 }
 </script>

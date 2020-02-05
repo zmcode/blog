@@ -31,6 +31,8 @@ module.exports = {
     'iview/dist/styles/iview.css', 
     '@/assets/css/app.css', 
     '@/assets/css/input.less',
+    '@/assets/css/svg.css',
+    '@/assets/css/font.css',
     'codemirror/lib/codemirror.css',
     // merge css
     'codemirror/addon/merge/merge.css',

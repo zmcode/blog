@@ -32,3 +32,25 @@ export const ShortHandSearch = params => {
       params
   )
 }
+
+// 编辑速记
+export const editShortHand = ({ id }, params) => {
+  return axiosTool.httpServer(
+    {
+      url: `/shorthand/edit/${id}`,
+      method: 'post'
+    },
+    params
+  )
+}
+
+// 删除速记
+export const deleteShortHand = ({ id }, params) => {
+  return axiosTool.httpServer(
+    {
+      url: `/shorthand/delete/${id}`,
+      method: 'delete'
+    },
+    params
+  )
+}
