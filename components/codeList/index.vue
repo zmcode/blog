@@ -13,7 +13,7 @@
     <div class="otherInfo">
       <div class="userInfo">
         <nuxt-link :to="`/home/${ListData.user_info.id}`">
-          <img :src="ListData.user_info.avatar">
+          <img :src="!ListData.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : ListData.user_info.avatar">
         </nuxt-link>
         <p>{{ ListData.user_info.name }}</p>
       </div>
@@ -39,6 +39,7 @@ export default {
       ItemHgith: 0, // 总的高度
       showIcon: false, // icon是否显示
       upIcon: false,
+      baseUrl: process.env.VUE_APP_IMG
     }
   },
   mounted() {

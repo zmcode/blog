@@ -10,7 +10,7 @@
         <h1 style='color: black; text-align: center'>{{ detail.title }}</h1>
         <div class="authorInfo">
           <nuxt-link :to="`/home/${detail.user_info.id}`">
-            <img :src="detail.user_info.avatar" >
+            <img :src="!detail.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : detail.user_info.avatar" >
           </nuxt-link>
           <div class="otherInfo">
             <p class='name'>{{detail.user_info.name}}</p>
@@ -63,7 +63,8 @@ export default {
       visibilityChange: '', // 页面切换事件名称(兼容浏览器)
       timer: '', // 定时器标识
       loginUserId: '',
-      reviewNum: 0
+      reviewNum: 0,
+      baseUrl: process.env.VUE_APP_IMG
     }
   },
   layout: 'blog',

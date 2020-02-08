@@ -3,7 +3,7 @@
        <ul class="Wrap"> 
            <li class="Item">
                <span class="ItemText">头像</span>
-               <Avatar  size='large' class="Avatar" :src="avatar"/>
+               <Avatar  size='large' class="Avatar" :src="!avatar ? `${baseImg}/default-avatar.e30559a.svg` : avatar"/>
                <div class='UploadWrap'>
                     <p style='margin-bottom: 5px'>支持 jpg、png、jpeg、gif 格式大小 2M 以内的图片</p>
                     <Upload 
@@ -56,7 +56,8 @@ export default {
             EditUserInfo: {}, // 可以编辑的用户数据
             avatar: '', // 用户头像(因为头像不同,单独存放一个)
             uploadType: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
-            UserTimeInfo: {}
+            UserTimeInfo: {},
+            baseImg: process.env.VUE_APP_IMG
         }
     },
     components: {

@@ -44,12 +44,7 @@ export default {
             let name = event.target.innerText
             this.$parent.$emit('on-click', name)
         }
-    },
-    mounted () {
-        console.log(this.source)
     }
-
-
 }
 </script>
 

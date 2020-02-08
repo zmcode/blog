@@ -10,6 +10,7 @@
           v-for='(item, index) in listData' 
           :item='item' 
           :key='index'
+          :itemsss="item"
         />
         </div>
         <!-- <Skeleton v-if="loading"/> -->

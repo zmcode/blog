@@ -125,7 +125,6 @@ export default {
     },
     methods: {
         showLayoutModal(name) {
-            console.log(name)
             name = name.replace(/\s*/g,'')
             if (name === '登出') {
               this.showModal = true

@@ -174,7 +174,6 @@ export default {
             this.listData = res.data.list
             this.currentPage = res.data.currentPage
             this.total = res.data.total
-            console.log(this.total)
             setTimeout(() => {
               this.loading = false
             }, 500)

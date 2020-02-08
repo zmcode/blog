@@ -86,7 +86,10 @@
     </commentList>
     </div>
     <div v-else class="loading">加载评论中.....</div>
-    <div v-if="allComment.length <= 0 && show" class="noCommentBox">暂无评论</div>
+    <div v-if="allComment.length <= 0 && show" class="noCommentBox">
+      <img :src='`${baseUrl}/null-1.png`' style="width: 300px">
+      <div>暂无评论</div>
+      </div>
     <span class="more" v-if="hasNextPage && show" @click="getmoreComment"> {{loading ? '加载中...' : '查看更多 > '}} </span>
   </div>
 </template>

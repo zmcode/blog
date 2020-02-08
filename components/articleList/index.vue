@@ -15,7 +15,7 @@
         </nuxt-link>
         <div class="handleWrap">
             <nuxt-link :to="`/home/${item.user_info.id}`">
-                <img :src="item.user_info.avatar" class="userHead">
+                <img :src="!item.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : item.user_info.avatar" class="userHead">
             </nuxt-link>
             <!-- <img :src="item.user_info.avatar" class="userHead"> -->
             <span style="color: #333">{{ item.user_info.name }}</span>
@@ -77,7 +77,8 @@ export default {
             id: '',
             showModal: false,
             category: '',
-            status: ''
+            status: '',
+            baseUrl: process.env.VUE_APP_IMG
         }
     },
     props: {

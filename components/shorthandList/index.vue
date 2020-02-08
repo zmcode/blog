@@ -7,7 +7,7 @@
             <div class="userInfo">
               <div class="userPopover">
                 <nuxt-link :to="`/home/${item.user_info.id}`">
-                  <img :src="item.user_info.avatar">
+                  <img :src="!item.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : item.user_info.avatar">
                 </nuxt-link>
               </div>
               <div class="headerContent">
@@ -77,7 +77,8 @@ export default {
   },
   data () {
     return {
-      showHandleBox: false
+      showHandleBox: false,
+      baseUrl: process.env.VUE_APP_IMG,
     }
   },
   // methods:{

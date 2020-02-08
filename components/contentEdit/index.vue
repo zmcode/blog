@@ -1,7 +1,7 @@
 <template>
   <div class="comment-form" :class="{'focused': isShowAcitonBox}" :style="{'background-color': color}">
       <div class="avatar-box" v-if='isShowAvavtar'>
-        <div :style="{'background': 'url(' + userInfo.avatar+ ')'}" class="avatar"></div>
+        <div :style="{'background': !userInfo.avatar ? 'url(' + `${baseUrl}/default-avatar.e30559a.svg` + ')' : 'url(' + userInfo.avatar + ')'}" class="avatar"></div>
       </div>
       <div class="form-box" ref="commentForm">
         <div class="input-box">
@@ -36,7 +36,8 @@ export default {
     return {
       expressionSelect: false,
       expressionUrl: expressionUrl,
-      forbidAdd: false
+      forbidAdd: false,
+      baseUrl: process.env.VUE_APP_IMG
     }
   },  
   components: { Button, expressionBox },

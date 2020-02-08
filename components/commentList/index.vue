@@ -4,7 +4,7 @@
         <div class="comment">
           <div class="user-avatar">
             <nuxt-link :to="`/home/${ commentItem.userInfo.id }`">
-              <div :style="{'background': 'url(' + commentItem.userInfo.avatar+ ')'}"></div>
+              <div :style="{'background': !commentItem.userInfo.avatar ? 'url(' + `${baseUrl}/default-avatar.e30559a.svg` + ')' : 'url(' + commentItem.userInfo.avatar + ')'}"></div>
             </nuxt-link>
           </div>
           <div class="content-box">
@@ -52,7 +52,7 @@
                       <div class="sub-comment-content-box">
                         <div class="sub-user-avatar">
                           <nuxt-link :to="`/home/${item.userInfo.id}`">
-                            <div :style="{'background': 'url(' + item.userInfo.avatar+ ')'}"></div>
+                            <div :style="{'background': !item.userInfo.avatar ? 'url(' + `${baseUrl}/default-avatar.e30559a.svg` + ')' : 'url(' + item.userInfo.avatar + ')'}"></div>
                           </nuxt-link>
                         </div>
                         <div class="sub-user-content-box">
@@ -150,7 +150,8 @@ export default {
       deleteContent: '',
       deleteId: '',
       hasParent: false,
-      parentId: ''
+      parentId: '',
+      baseUrl: process.env.VUE_APP_IMG
     }
   },
   methods: {
@@ -198,7 +199,6 @@ export default {
       this.deleteId = id
       this.hasParent = hasParent
       this.parentId = parentId
-      console.log(this.deleteId)
       if (!hasParent) {
         this.deleteContent = '删除评论后, 评论下的所有回复都会被删除'
       } else {
@@ -214,7 +214,6 @@ export default {
             if (this.hasParent) {
               topCommentList({id: this.parentId})
                 .then(res => {
-                  console.log(this.reviewNum)
                   this.changeReviewNum(this.reviewNum - 1)
                   this.topCommentListData = res.data.list
                   this.hasNextPage = res.data.hasNextPage
@@ -222,7 +221,6 @@ export default {
                   this.replyNum = this.replyNum - 1
                 })
             } else {
-              console.log(this.replyNum)
               if (this.replyNum > 0) {
                 this.changeReviewNum(this.reviewNum - this.replyNum - 1)  
               } else {

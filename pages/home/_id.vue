@@ -4,7 +4,7 @@
       <div slot="main">
         <div class="userWrap">
           <div class="userInfoWrap">
-            <img :src="userInfo.avatar" />
+            <img :src="!userInfo.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : userInfo.avatar" />
             <div class="userInfo">
               <h2>{{ userInfo.name }}</h2>
               <span>简介: {{ userInfo.summary }}</span>
@@ -71,7 +71,8 @@ export default {
       loading: true,
       nextPage: 1,
       hasNextPage: false,
-      userId: ''
+      userId: '',
+      baseUrl: process.env.VUE_APP_IMG
     }
   },
   layout: 'blog',
