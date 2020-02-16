@@ -11,6 +11,7 @@ const _267a5d76 = () => interopDefault(import('..\\pages\\search\\index.vue' /* 
 const _19059d6b = () => interopDefault(import('..\\pages\\shorthand\\index.vue' /* webpackChunkName: "pages_shorthand_index" */))
 const _56b991f7 = () => interopDefault(import('..\\pages\\write\\index.vue' /* webpackChunkName: "pages_write_index" */))
 const _153b352c = () => interopDefault(import('..\\pages\\learn\\article\\index.vue' /* webpackChunkName: "pages_learn_article_index" */))
+const _6dcd1e67 = () => interopDefault(import('..\\pages\\setting\\blogshow\\index.vue' /* webpackChunkName: "pages_setting_blogshow_index" */))
 const _43a0d02a = () => interopDefault(import('..\\pages\\setting\\password\\index.vue' /* webpackChunkName: "pages_setting_password_index" */))
 const _28cc4df1 = () => interopDefault(import('..\\pages\\setting\\person\\index.vue' /* webpackChunkName: "pages_setting_person_index" */))
 const _34d43df2 = () => interopDefault(import('..\\pages\\home\\_id.vue' /* webpackChunkName: "pages_home__id" */))
@@ -58,6 +59,10 @@ export const routerOptions = {
     path: "/learn/article",
     component: _153b352c,
     name: "learn-article"
+  }, {
+    path: "/setting/blogshow",
+    component: _6dcd1e67,
+    name: "setting-blogshow"
   }, {
     path: "/setting/password",
     component: _43a0d02a,

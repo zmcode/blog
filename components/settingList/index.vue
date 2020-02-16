@@ -31,6 +31,11 @@ data () {
                     name: '修改密码',
                     path: '/setting/password',
                     icon: 'md-lock'
+                },
+                {
+                    name: '博客秀',
+                    path: '/setting/blogshow',
+                    icon: 'ios-body'
                 }
             ],
             activeNow: 0,

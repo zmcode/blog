@@ -82,7 +82,7 @@ export default {
       puArComment(
         { id: this.$route.params.id }, 
         {
-          content: this.$refs.richInput.innerHTML.replace(/<(?!img|p|\/p).*?>/g, ''),
+          content: this.$refs.richInput.innerHTML.replace(/<(?!img|p|div|\/p).*?>/g, ''),
           replyUserId: this.replyUserInfo.id,
           parentId: this.parentId ? this.parentId : '',
           articleId: this.articleId

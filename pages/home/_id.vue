@@ -49,8 +49,13 @@
               {{ userInfo.created | dateFormat('day') }}
             </div>
           </div>
+          <div class="blogShow" v-if="userInfo.blogshow">
+            <p style="font-size: 18px; margin-bottom: 10px">博客秀</p>
+            <div class="upload-img" :style="{'background': 'url(' + userInfo.blogshow+ ')'}"/>
+            <!-- <div class="imgContent"  :style="{background: 'url(http://test.yjdzm.com/6666.gif)'}"></div> -->
+            <!-- <img src="http://test.yjdzm.com/6666.gif" alt="" class="imgContent"> -->
+          </div>
         </div>
-        
       </div>
     </contentLayout>
   </div>
@@ -192,10 +197,11 @@ export default {
   }
 }
 .handleFixedWrap {
+  position: fixed;
   .userOtherInfo {
-    position: fixed;
+    position: relative;
     text-align: center;
-    width: 230px;
+    width: 240px;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
     background-color: #fff;
     padding: 20px;
@@ -218,6 +224,36 @@ export default {
       text-align: right;
       margin-top: 20px;
     }
+  }
+  .blogShow {
+    margin-top: 30px;
+    border-radius: 10px;
+    width: 240px;
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    .upload-img {
+      background: #fff;
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+      cursor: auto;
+      position: relative;
+      overflow: hidden;
+      width: 200px;
+      height: 250px;
+      max-width: 200px;
+      max-height: 250px;
+      line-height: 250px;
+      background-repeat: no-repeat !important;
+      background-size: cover !important
+    }
+    // .imgContent {
+    //   max-width: 200px;
+    //   border-radius: 5px;
+    //   margin-top: 10px;
+    //   max-height: 300px;
+    // }
   }
 }
 

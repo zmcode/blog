@@ -51,10 +51,13 @@ export default {
       this.changeItemData(this.item)
     },
     deleteSH () {
+      let _this = this
       deleteShortHand({id: this.item._id}, {topic: this.item.topic})
         .then(res => {
           if (res.code === 200) {
-            this.getShortHandList(1)
+            this.$Message.success('删除成功')
+            // this.getShortHandList(1, '')
+            _this.$router.replace('/shorthand')
           }
         })
     }

@@ -56,14 +56,16 @@ export default {
     },
     search: {
       type:Function
-    }
+    },
+    changeCateGory: [Function]
   },
   methods: {
     CateGoryArticle(index, name) {
       this.active = index
+      this.changeCateGory(name)
       // 点击的时候,改变样式,并且改变路由,从而触发再次请求对应的数据
       this.$router.push({
-        path: `${this.path}?${this.type}=${name}`
+        path: `${this.path}?page=1&${this.type}=${name}`
       })
     },
     searchShortList() {

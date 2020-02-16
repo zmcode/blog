@@ -81,7 +81,7 @@
     :getShortHandList="getShortHandList"
      v-if="!loading"/>
     <div class="pageWrap">
-      <Page size="small" :total='total' :pageSize='5' @on-change='getMoreList' v-if="total && !loading" :current="currentPage"/>
+      <Page size="small" :total='total' :pageSize='5' @on-change='changePage' v-if="total && !loading" :current="currentPage"/>
     </div>
     <shorthandEdit :getShortHandList="getShortHandList" :isShowEdit='isShowEdit'  :changeEditVis="changeEditVis" :itemData="itemData"></shorthandEdit>
     <loadingBox :loading='loading' />
@@ -90,7 +90,7 @@
     </div>
   </div>
   <div slot="side">
-    <sideList :source='topicData' :path='path'></sideList>
+    <sideList :source='topicData' :path='path' :changeCateGory='changeCateGory'></sideList>
   </div>
 </contentLayout>
 <!-- <Modal
@@ -108,6 +108,7 @@
 </template>
 
 <script>
+/*eslint-disable no-prototype-builtins */
 /*eslint-disable no-useless-escape */
 import shorthandList from '../../components/shorthandList'
 // import Skeleton from '../../components/Skeleton'
@@ -143,7 +144,8 @@ export default {
   async asyncData({ query, error }) {
     try {
       const { data: { list, hasNextPage, next, total, currentPage } } = await ShortHandList({
-        topic: query.topic
+        topic: query.topic,
+        page: query.page
       })
       const { data } = await GetRecordSelect()
       return {
@@ -153,7 +155,8 @@ export default {
         loading: false,
         topicData: data,
         total,
-        currentPage
+        currentPage,
+        topic: query.topic
       }
     } catch {
      error({ statusCode: 404 })
@@ -162,10 +165,11 @@ export default {
   methods: {
     // 获取文章的列表
     getShortHandList(page, topic) {
+      if(page <= 0) page = 1
       this.loading = true
       ShortHandList({
-        page: page || this.nextPage,
-        topic: topic || this.topic
+        page: page || 1,
+        topic: topic || ''
       })
         .then(res => {
           if(res.code === 200) {
@@ -177,6 +181,9 @@ export default {
             setTimeout(() => {
               this.loading = false
             }, 500)
+            if (!topic) {
+              this.topic = ''
+            }
           }
         })
     },
@@ -189,8 +196,11 @@ export default {
     changeItemData (data) {
       this.itemData = data
     },
-    getMoreList (value) {
-      this.getShortHandList(value)
+    changePage (value) {
+      this.$router.push(`/shorthand?page=${value}&topic=${this.topic}`)
+    },
+    changeCateGory (name) {
+      this.topic = name
     }
   },
   mounted() {
@@ -214,9 +224,8 @@ export default {
     watch: {
       $route({ query }) {
         this.listData = []
-        this.nextPage = 1
         this.topic = query.topic || ''
-        this.getShortHandList(1,this.topic)
+        this.getShortHandList(query.page,query.topic)
       }
     }
 }

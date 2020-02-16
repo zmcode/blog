@@ -92,16 +92,20 @@ export default {
       uploadType: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
       selectData: [
         {
-          name: '摸鱼/生活'
+          name: '摸鱼/生活',
+          a: true
         },
         {
-          name: 'bug/踩坑'
+          name: 'bug/踩坑',
+          a: true
         },
         {
-          name: '技巧/资源'
+          name: '技巧/资源',
+          a: true
         },
         {
-          name: '笔记/记录'
+          name: '笔记/记录',
+          a: true
         }
       ],// 先创建,后期删除
       expressionSelect: false,
@@ -191,12 +195,13 @@ export default {
       } 
       this.loading = true
       let ShortHandInfo = {
-        content: this.$refs.richInput.innerHTML.replace(/<(?!img|p|\/p).*?>/g, '') || ' ',
+        content: this.$refs.richInput.innerHTML.replace(/<(?!img|p|div|\/p).*?>/g, '') || ' ',
         topic: this.topic || this.defaultTopic,
         status: 'online',
         imgData: this.imgUrlData
       }
       if (this.isEdit) {
+        let _this = this
         editShortHand({id: this.itemData._id}, ShortHandInfo)
          .then(res => {
             if(res.code === 200)
@@ -206,13 +211,14 @@ export default {
             this.nextPage = 1
             this.topic = ''
             this.placeholderText = '快速记录你的笔记'
-            this.getShortHandList(1)
+            this.getShortHandList(_this.$route.query.page, _this.$route.query.topic)
             this.changeEditVis(false)
             setTimeout(() => {
               this.loading = false
             }, 200)
           })
       } else {
+        // let _this = this
         publishShortHand(ShortHandInfo)
         .then(res => {
           if(res.code === 200)
@@ -222,7 +228,8 @@ export default {
           this.nextPage = 1
           this.topic = ''
           this.placeholderText = '快速记录你的笔记'
-          this.getShortHandList(1)
+          this.getShortHandList(1, '')
+          // _this.$router.replace('/shorthand')
           setTimeout(() => {
             this.loading = false
           }, 200)
@@ -326,16 +333,16 @@ export default {
     border-radius: 2px;
     border: 1px solid hsla(0,0%,59.2%,.2);
     background-color: rgba(226,230,235,.2);
+    .Richedit {
+      max-height: 200px;
+      overflow-y: auto;
+      &:after {
+        opacity: 0.7;
+      }
+    }
     &.whiteBg {
       background-color: #fff;
       border: 1px solid hsla(0,0%,59.2%,.5);
-      .Richedit {
-        max-height: 200px;
-        overflow-y: auto;
-        &:after {
-          opacity: 0.7;
-        }
-      }
     }
     .textWrap {
       position: relative;

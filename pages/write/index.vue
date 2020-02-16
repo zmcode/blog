@@ -59,8 +59,6 @@
                         :accept="`${uploadType.join(',')}`"
                     >
                         <div class="upload-img" :style="{'background': 'url(' + coverUrl+ ')'}">   
-
-
                         </div>
                     </Upload>
             <template slot="footer">

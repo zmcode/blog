@@ -111,6 +111,7 @@ export default {
                     icon: 'md-walk',
                     name: '登出',
                     id: 'login',
+                    a: true
                 }
             ],
             searchType: 'q',

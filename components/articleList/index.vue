@@ -1,7 +1,7 @@
 <template>
   <div class="listWrap">
     <nuxt-link class="articleLink-img" v-if="item.cover" :to="howTogo">   
-        <img :src="item.cover" alt="">
+      <img :src="item.cover" alt="">
     </nuxt-link>
     <div class="listContent">
         <div>
@@ -14,11 +14,14 @@
             </div>
         </nuxt-link>
         <div class="handleWrap">
-            <nuxt-link :to="`/home/${item.user_info.id}`">
-                <img :src="!item.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : item.user_info.avatar" class="userHead">
+            <nuxt-link :to="`/home/${item.user_info.id}`" class="linkWrap" @mouseenter.native='showCard = true' @mouseleave.native='showCard = false'>
+              <img :src="!item.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : item.user_info.avatar" class="userHead">
+                          <span style="color: #333">{{ item.user_info.name }}</span>
+              <div class='card' v-show="showCard">
+                <userCard :onlyImg='true' :listUserData='item.user_info'/>
+              </div>
             </nuxt-link>
             <!-- <img :src="item.user_info.avatar" class="userHead"> -->
-            <span style="color: #333">{{ item.user_info.name }}</span>
             <Icon type="ios-book-outline" style="margin-left:12px;"/>
             <span style="margin-left: 5px;">{{item.category}}</span>
             <Icon type="ios-time-outline" style="margin-left: 12px;"/>
@@ -55,6 +58,7 @@
 </template>
 
 <script>
+import userCard from '@/components/userCard'
 import Modal from '../../components/myModal'
 import { deleteArticle, } from '../../axios/api/article'
 import dropList from '../../components/dropList'
@@ -78,7 +82,8 @@ export default {
             showModal: false,
             category: '',
             status: '',
-            baseUrl: process.env.VUE_APP_IMG
+            baseUrl: process.env.VUE_APP_IMG,
+            showCard: false
         }
     },
     props: {
@@ -101,7 +106,8 @@ export default {
     components: {
         dropList,
         dopListItem,
-        Modal
+        Modal,
+        userCard
     },
     methods: {
         handleArticle(name) {
@@ -195,6 +201,14 @@ export default {
             color: black;
             display: flex;
             align-items: center;
+            .linkWrap {
+              position: relative;
+            }
+            .card {
+              position: absolute;
+              left: -100px;
+              z-index: 9999;
+            }
             span {
                 font-size: 12px;
             }
