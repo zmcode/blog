@@ -156,7 +156,7 @@ export default {
         topicData: data,
         total,
         currentPage,
-        topic: query.topic
+        topic: query.topic || ''
       }
     } catch {
      error({ statusCode: 404 })

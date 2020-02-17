@@ -195,6 +195,10 @@ export default {
           .content {
             white-space: pre-wrap;
           }
+          ::v-deep img {
+            max-width: 40px;
+          }
+
       }
       .pinImg {
          margin: 10px 0 10px 40px;
