@@ -1,7 +1,7 @@
 <template>
 <div>
 <div v-if='topic && !this.LoginUserId' class="cateBox">
-  <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span> 的速记
+  <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span>
 </div>
 <contentLayout>
   <div slot='main'>
@@ -71,7 +71,7 @@
     </div> -->
     <shorthandInput :getShortHandList='getShortHandList'></shorthandInput>
     <div v-if='topic && this.LoginUserId' style="padding-bottom: 10px">
-      <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span> 的速记
+      <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span>
     </div>
     <shorthandList 
     :source='listData' 
@@ -90,7 +90,9 @@
     </div>
   </div>
   <div slot="side">
-    <sideList :source='topicData' :path='path' :changeCateGory='changeCateGory'></sideList>
+    <div class="handleFixedWrap">
+      <sideList :source='topicData' :path='path' :changeCateGory='changeCateGory'></sideList>
+    </div>
   </div>
 </contentLayout>
 <!-- <Modal
@@ -159,12 +161,13 @@ export default {
         topic: query.topic || ''
       }
     } catch {
-     error({ statusCode: 404 })
+     error({ statusCode: 500 })
     }
   },
   methods: {
     // 获取文章的列表
     getShortHandList(page, topic) {
+      // 防止用户输入栏乱输入
       if(page <= 0) page = 1
       this.loading = true
       ShortHandList({
@@ -214,12 +217,12 @@ export default {
       })
   },
   computed: {
+      ...mapState({
+        UserToken: state => state.login.UserToken
+      }),
         ...mapState({
-          UserToken: state => state.login.UserToken
-        }),
-         ...mapState({
-          userInfo: state => state.login.userInfo
-        })
+        userInfo: state => state.login.userInfo
+      })
     },
     watch: {
       $route({ query }) {
@@ -384,5 +387,8 @@ export default {
   ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
     background: rgba(0, 0, 0, 0);
   }
+}
+.handleFixedWrap {
+  position: fixed;
 }
 </style>

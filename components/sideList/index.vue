@@ -1,7 +1,7 @@
 <template>
   <div class="utilWrap">
     <div>
-      <div style="position:fixed">
+      <div>
          <nav class="sideWrap">
             <ul class="ContentWrap">
                 <h3 class="title"> <Icon type="ios-folder-open-outline" :size="22" style="margin-right: 10px;"/>分类</h3>
@@ -73,16 +73,22 @@ export default {
     }
   },
   mounted() {
-    this.path === '/learn/article' ? this.type = 'category' : this.type  = 'topic'
+    const typeMap = new Map([
+      ['/learn/article', 'category'],
+      ['/shorthand', 'topic'],
+      ['/codeshare', 'type']
+    ])
+    this.type = typeMap.get(this.path)
+    // this.path === '/learn/article' ? this.type = 'category' : this.type  = 'topic'
   }
 }
 </script>
 
 <style lang="less" scoped>
 .utilWrap {
-  width: 150px;
+  width: 210px;
   .sideWrap {
-    min-width: 210px;
+    max-width: 210px;
     // position: fixed;
     border-radius: 0.2rem;
     background-color: #fff;

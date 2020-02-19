@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if='activeName' class="cateBox">
-      <nuxt-link to='/learn/article' class="cateBox-link">文章</nuxt-link> / 分类为 <span style="color: red">{{activeName}}</span> 的文章
+      <nuxt-link to='/learn/article' class="cateBox-link">文章</nuxt-link> / 分类为 <span style="color: red">{{activeName}}</span>
     </div>
     <contentLayout>
       <template slot="main" >
@@ -23,11 +23,13 @@
       </div>
       </template>
       <template slot="side">
-        <sideList
-        :source='categoryData'
-        :path='path'
-        :changeCateGory='changeCateGory'
-        />
+        <div class="handleFixedWrap">
+          <sideList
+          :source='categoryData'
+          :path='path'
+          :changeCateGory='changeCateGory'
+          />
+        </div>
       </template>
     </contentLayout>
   </div>
@@ -60,7 +62,7 @@ export default {
       this.loading = true
       this.$store.dispatch('article/getArticle', {
             pageSize: 5,
-            page: page,
+            page: page || 1,
             category: category || this.activeName
           })
             .then(res => {
@@ -129,5 +131,8 @@ export default {
 }
 .cateBox {
   padding: 20px 20px 0 20px;
+}
+.handleFixedWrap {
+  position:fixed;
 }
 </style>

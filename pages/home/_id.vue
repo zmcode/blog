@@ -34,19 +34,19 @@
       <div slot="side">
         <div class="handleFixedWrap">
           <div class="userOtherInfo">
-          <div class="countWrap">
-            <div class="articleCountInfo">
-              <p>发布了</p>
-              <p>{{ userInfo.articleCount }}</p>
+            <div class="countWrap">
+              <div class="articleCountInfo">
+                <p>发布了</p>
+                <p>{{ userInfo.articleCount }}</p>
+              </div>
+              <div class="likeCountInfo">
+                <p>喜欢</p>
+                <p>{{ userInfo.likeCount }}</p>
+              </div>
             </div>
-            <div class="likeCountInfo">
-              <p>喜欢</p>
-              <p>{{ userInfo.likeCount }}</p>
-            </div>
-          </div>
-          <div class="joinInfo"> 
-            <span style='float: left'>加入于: </span>
-              {{ userInfo.created | dateFormat('day') }}
+            <div class="joinInfo"> 
+              <span style='float: left'>加入于: </span>
+                {{ userInfo.created | dateFormat('day') }}
             </div>
           </div>
           <div class="blogShow" v-if="userInfo.blogshow">

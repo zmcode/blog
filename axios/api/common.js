@@ -86,3 +86,14 @@ export const getUserId = params => {
         params
     )
 }
+
+// 获取代码分类
+export const getCodeType = params => {
+    return axiosTool.httpServer(
+        {
+            url: '/codeshare/codetype',
+            method: 'get'
+        },
+        params
+    )
+}
