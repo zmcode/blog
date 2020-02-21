@@ -218,7 +218,7 @@ export default {
             }, 200)
           })
       } else {
-        // let _this = this
+        let _this = this
         publishShortHand(ShortHandInfo)
         .then(res => {
           if(res.code === 200)
@@ -228,7 +228,11 @@ export default {
           this.nextPage = 1
           this.topic = ''
           this.placeholderText = '快速记录你的笔记'
-          this.getShortHandList(1, '')
+          if (_this.$route.query.page) {
+            _this.$router.replace('/shorthand')
+          } else {
+            this.getShortHandList(1, '')
+          }
           // _this.$router.replace('/shorthand')
           setTimeout(() => {
             this.loading = false

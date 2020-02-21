@@ -45,10 +45,10 @@ export const editShortHand = ({ id }, params) => {
 }
 
 // 删除速记
-export const deleteShortHand = ({ id }, params) => {
+export const deleteShortHand = (params) => {
   return axiosTool.httpServer(
     {
-      url: `/shorthand/delete/${id}`,
+      url: '/shorthand/delete',
       method: 'delete'
     },
     params

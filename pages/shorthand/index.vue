@@ -74,12 +74,12 @@
       <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span>
     </div>
     <shorthandList 
-    :source='listData' 
-    :LoginUserId='LoginUserId' 
-    :changeEditVis="changeEditVis" 
-    :changeItemData="changeItemData"
-    :getShortHandList="getShortHandList"
-     v-if="!loading"/>
+      :source='listData' 
+      :LoginUserId='LoginUserId' 
+      :changeEditVis="changeEditVis" 
+      :changeItemData="changeItemData"
+      :getShortHandList="getShortHandList"
+      v-if="!loading"/>
     <div class="pageWrap">
       <Page size="small" :total='total' :pageSize='5' @on-change='changePage' v-if="total && !loading" :current="currentPage"/>
     </div>
