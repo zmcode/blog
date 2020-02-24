@@ -1,33 +1,44 @@
 <template>
   <div>
-    <div v-if='type' class="cateBox">
-      <nuxt-link to='/codeshare' class="cateBox-link">片段</nuxt-link> / 分类为 <span style="color: red">{{type}}</span>
+    <div v-if="type" class="cateBox">
+      <nuxt-link to="/codeshare" class="cateBox-link">片段</nuxt-link> / 分类为
+      <span style="color: red">{{ type }}</span>
     </div>
-      <contentLayout>
-      <div slot='main'>
-        <loadingBox :loading='loading'></loadingBox>
+    <contentLayout>
+      <div slot="main">
+        <loadingBox :loading="loading"></loadingBox>
         <div v-if="reFresh && !loading">
-          <codeList :ListData='item' v-for='(item, index) in list' :key="index"></codeList>
+          <codeList
+            :ListData="item"
+            v-for="(item, index) in list"
+            :key="index"
+          ></codeList>
         </div>
         <div class="pageWrap">
-          <Page size="small" :total='total' :pageSize='5' @on-change='changePage' v-if="total && !loading" :current="currentPage"/>
+          <Page
+            size="small"
+            :total="total"
+            :pageSize="5"
+            @on-change="changePage"
+            v-if="total && !loading"
+            :current="currentPage"
+          />
         </div>
       </div>
       <div slot="side">
         <div class="handleFixedWrap">
           <sideList
             class="typeList"
-            :source='codeTypeData'
-            path='/codeshare'
-            :changeCateGory='changeCateGory'
-
+            :source="codeTypeData"
+            path="/codeshare"
+            :changeCateGory="changeCateGory"
           />
           <!-- <div class="createWrap" @click='create'>
             <Icon type="md-create" />
             <span>创建</span>
           </div> -->
           <!-- <myButton to="/contribute" type='success'  class="create">创建</myButton> -->
-          <div class="btnWrap" @click='create'>
+          <div class="btnWrap" @click="create">
             <div>
               <span class="btnText">分享</span>
               <span class="btnText">片段</span>
@@ -44,16 +55,16 @@
 <script>
 import loadingBox from '@/components/loadingBox'
 import sideList from '@/components/sideList'
-import {getCodeType} from '@/axios/api/common.js'
+import { getCodeType } from '@/axios/api/common.js'
 // import myButton from '@/components/Button'
 import { CodeShareList } from '@/axios/api/codeShare.js'
 import codeList from '@/components/codeList'
-import contentLayout  from '@/components/contentLayout'
+import contentLayout from '@/components/contentLayout'
 export default {
   layout: 'blog',
   data() {
     return {
-      reFresh:true
+      reFresh: true
     }
   },
   components: {
@@ -63,11 +74,12 @@ export default {
     sideList,
     loadingBox
   },
-  mounted() {
-  },
+  mounted() {},
   async asyncData({ error, query }) {
     try {
-      const { data: { list, total, currentPage, pageSize, hasNextPage } } = await CodeShareList({
+      const {
+        data: { list, total, currentPage, pageSize, hasNextPage }
+      } = await CodeShareList({
         pageSize: 5,
         type: query.type,
         page: query.page
@@ -89,43 +101,41 @@ export default {
   },
   methods: {
     getMoreList(page, type) {
-      if(page <= 0) page = 1
+      if (page <= 0) page = 1
       this.loading = true
       CodeShareList({
         pageSize: 5,
         type: type || '',
         page
+      }).then(res => {
+        this.list = res.data.list
+        this.total = res.data.total
+        setTimeout(() => {
+          document.documentElement.scrollTop = 0
+          this.currentPage = res.data.currentPage
+          this.loading = false
+        }, 500)
       })
-       .then(res => {
-         this.list = res.data.list
-         this.total = res.data.total
-          setTimeout (() => {
-            document.documentElement.scrollTop = 0
-            this.currentPage = res.data.currentPage
-            this.loading = false
-          }, 500)
-       })
     },
-    changeCateGory (value) {
+    changeCateGory(value) {
       this.type = value
     },
-    create () {
+    create() {
       this.$router.push('/contribute')
     },
-    changePage (value) {
+    changePage(value) {
       this.$router.push(`/codeshare?page=${value}&type=${this.type}`)
-    },
+    }
   },
   watch: {
     list() {
       // 重新渲染子组件,让其可以重新计算高度
       this.reFresh = false
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.reFresh = true
       })
     },
     $route({ query }) {
-
       this.list = []
       this.type = query.type || ''
       this.getMoreList(query.page, query.type)
@@ -137,14 +147,17 @@ export default {
 <style lang="less" scoped>
 .pageWrap {
   text-align: center;
-  ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
+  ::v-deep.ivu-page-prev,
+  ::v-deep.ivu-page-next,
+  ::v-deep.ivu-page-item {
+    font-weight: bold;
     background: rgba(0, 0, 0, 0);
   }
 }
 .handleFixedWrap {
   position: fixed;
   .typeList {
-    position: relative
+    position: relative;
   }
   .createWrap {
     font-size: 15px;
@@ -157,10 +170,10 @@ export default {
     cursor: pointer;
     user-select: none;
     &:active {
-      transform: scale(0.95)
+      transform: scale(0.95);
     }
     &:hover {
-      color: #666
+      color: #666;
     }
   }
 }
@@ -170,7 +183,6 @@ export default {
 </style>
 
 <style scoped>
-
 .btnWrap {
   margin-top: 20px;
   width: 150px;
@@ -178,7 +190,7 @@ export default {
   cursor: pointer;
   perspective: 500px;
   box-sizing: border-box;
-  margin: 20px auto
+  margin: 20px auto;
 }
 
 .btnWrap div {
@@ -231,7 +243,7 @@ export default {
     transform: rotateX(0deg);
   }
   100% {
-  transform: rotateX(-360deg);
+    transform: rotateX(-360deg);
   }
 }
 </style>

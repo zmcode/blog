@@ -56,7 +56,7 @@ export default {
     padding: 0;
     list-style: none;
     color: #333;
-    // font-weight: 400;
+    font-weight: 400;
     padding: 5px 0;
     a {
       display: block;
@@ -83,7 +83,7 @@ export default {
       }
     }
     &.d1 {
-      // font-weight: 600;
+      font-weight: 600;
       color: #000;
        > a {
         padding: 0px 0 0px 21px;

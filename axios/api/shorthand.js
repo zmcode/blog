@@ -43,7 +43,6 @@ export const editShortHand = ({ id }, params) => {
     params
   )
 }
-
 // 删除速记
 export const deleteShortHand = (params) => {
   return axiosTool.httpServer(

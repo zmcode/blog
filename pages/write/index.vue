@@ -283,7 +283,7 @@ export default {
             margin: 0;
             padding: 0;
             font-size: 32px;
-            // font-weight: 700;
+            font-weight: 700;
             color: #000;
             border: none;
             outline: none;

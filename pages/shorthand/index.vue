@@ -1,11 +1,12 @@
 <template>
-<div>
-<div v-if='topic && !this.LoginUserId' class="cateBox">
-  <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span>
-</div>
-<contentLayout>
-  <div slot='main'>
-    <!-- <div class="publishWrap" v-if='UserToken'>
+  <div>
+    <div v-if="topic && !this.LoginUserId" class="cateBox">
+      <nuxt-link to="/shorthand" class="cateBox-link">速记</nuxt-link> / 分类为
+      <span style="color: red">{{ topic }}</span>
+    </div>
+    <contentLayout>
+      <div slot="main">
+        <!-- <div class="publishWrap" v-if='UserToken'>
       <div class="content">
         <div class="textWrap" >
             <div class="textCard"> 
@@ -69,33 +70,51 @@
       <myButton type='success' @click='publish'>发布</myButton>
       </div>
     </div> -->
-    <shorthandInput :getShortHandList='getShortHandList'></shorthandInput>
-    <div v-if='topic && this.LoginUserId' style="padding-bottom: 10px">
-      <nuxt-link to='/shorthand' class="cateBox-link">速记</nuxt-link> / 分类为 <span style="color: red">{{topic}}</span>
-    </div>
-    <shorthandList 
-      :source='listData' 
-      :LoginUserId='LoginUserId' 
-      :changeEditVis="changeEditVis" 
-      :changeItemData="changeItemData"
-      :getShortHandList="getShortHandList"
-      v-if="!loading"/>
-    <div class="pageWrap">
-      <Page size="small" :total='total' :pageSize='5' @on-change='changePage' v-if="total && !loading" :current="currentPage"/>
-    </div>
-    <shorthandEdit :getShortHandList="getShortHandList" :isShowEdit='isShowEdit'  :changeEditVis="changeEditVis" :itemData="itemData"></shorthandEdit>
-    <loadingBox :loading='loading' />
-    <div class="NoList" v-if='listData.length === 0 && !loading'>
-       <p>当前没有内容</p>
-    </div>
-  </div>
-  <div slot="side">
-    <div class="handleFixedWrap">
-      <sideList :source='topicData' :path='path' :changeCateGory='changeCateGory'></sideList>
-    </div>
-  </div>
-</contentLayout>
-<!-- <Modal
+        <shorthandInput :getShortHandList="getShortHandList"></shorthandInput>
+        <div v-if="topic && this.LoginUserId" style="padding-bottom: 10px">
+          <nuxt-link to="/shorthand" class="cateBox-link">速记</nuxt-link> /
+          分类为 <span style="color: red">{{ topic }}</span>
+        </div>
+        <shorthandList
+          :source="listData"
+          :LoginUserId="LoginUserId"
+          :changeEditVis="changeEditVis"
+          :changeItemData="changeItemData"
+          :getShortHandList="getShortHandList"
+          v-if="!loading"
+        />
+        <div class="pageWrap">
+          <Page
+            size="small"
+            :total="total"
+            :pageSize="5"
+            @on-change="changePage"
+            v-if="total && !loading"
+            :current="currentPage"
+          />
+        </div>
+        <shorthandEdit
+          :getShortHandList="getShortHandList"
+          :isShowEdit="isShowEdit"
+          :changeEditVis="changeEditVis"
+          :itemData="itemData"
+        ></shorthandEdit>
+        <loadingBox :loading="loading" />
+        <div class="NoList" v-if="listData.length === 0 && !loading">
+          <p>当前没有内容</p>
+        </div>
+      </div>
+      <div slot="side">
+        <div class="handleFixedWrap">
+          <sideList
+            :source="topicData"
+            :path="path"
+            :changeCateGory="changeCateGory"
+          ></sideList>
+        </div>
+      </div>
+    </contentLayout>
+    <!-- <Modal
   title='提示'
   :visible='showModal'
   :mask='true'
@@ -105,8 +124,7 @@
 >
     <p>检测到你没有登录账号或者账号验证过期,需要登陆才可以发布速记</p>
 </Modal> -->
-</div>
-
+  </div>
 </template>
 
 <script>
@@ -118,7 +136,7 @@ import { ShortHandList } from '../../axios/api/shorthand'
 import { GetRecordSelect, getUserId } from '../../axios/api/common'
 import sideList from '../../components/sideList'
 import { mapState } from 'vuex'
-import contentLayout  from '../../components/contentLayout'
+import contentLayout from '../../components/contentLayout'
 import shorthandInput from '../../components/ShorthandInput'
 import shorthandEdit from '../../components/shorthandEdit'
 import loadingBox from '../../components/loadingBox'
@@ -135,7 +153,7 @@ export default {
   },
   data() {
     return {
-      showModal:false,
+      showModal: false,
       path: '/shorthand',
       LoginUserId: '',
       isShowEdit: false,
@@ -145,7 +163,9 @@ export default {
   },
   async asyncData({ query, error }) {
     try {
-      const { data: { list, hasNextPage, next, total, currentPage } } = await ShortHandList({
+      const {
+        data: { list, hasNextPage, next, total, currentPage }
+      } = await ShortHandList({
         topic: query.topic,
         page: query.page
       })
@@ -161,91 +181,89 @@ export default {
         topic: query.topic || ''
       }
     } catch {
-     error({ statusCode: 500 })
+      error({ statusCode: 500 })
     }
   },
   methods: {
     // 获取文章的列表
     getShortHandList(page, topic) {
       // 防止用户输入栏乱输入
-      if(page <= 0) page = 1
+      if (page <= 0) page = 1
       this.loading = true
       ShortHandList({
         page: page || 1,
         topic: topic || ''
-      })
-        .then(res => {
-          if(res.code === 200) {
-            this.nextPage = res.data.next
-            this.hasNextPage = res.data.hasNextPage
-            this.listData = res.data.list
-            this.currentPage = res.data.currentPage
-            this.total = res.data.total
-            setTimeout(() => {
-              this.loading = false
-            }, 500)
-            if (!topic) {
-              this.topic = ''
-            }
+      }).then(res => {
+        if (res.code === 200) {
+          this.nextPage = res.data.next
+          this.hasNextPage = res.data.hasNextPage
+          this.listData = res.data.list
+          this.currentPage = res.data.currentPage
+          this.total = res.data.total
+          setTimeout(() => {
+            this.loading = false
+          }, 500)
+          if (!topic) {
+            this.topic = ''
           }
-        })
+        }
+      })
     },
     goLogin() {
       this.$router.replace('/login')
     },
-    changeEditVis (value) {
+    changeEditVis(value) {
       this.isShowEdit = value
     },
-    changeItemData (data) {
+    changeItemData(data) {
       this.itemData = data
     },
-    changePage (value) {
+    changePage(value) {
       this.$router.push(`/shorthand?page=${value}&topic=${this.topic}`)
     },
-    changeCateGory (name) {
+    changeCateGory(name) {
       this.topic = name
     }
   },
   mounted() {
     getUserId({
       token: this.UserToken
+    }).then(res => {
+      if (res.code === 200) {
+        this.LoginUserId = res.id
+      }
     })
-      .then(res => {
-        if (res.code === 200) {
-          this.LoginUserId = res.id
-        }
-      })
   },
   computed: {
-      ...mapState({
-        UserToken: state => state.login.UserToken
-      }),
-        ...mapState({
-        userInfo: state => state.login.userInfo
-      })
-    },
-    watch: {
-      $route({ query }) {
-        this.listData = []
-        this.topic = query.topic || ''
-        this.getShortHandList(query.page,query.topic)
-      }
+    ...mapState({
+      UserToken: state => state.login.UserToken
+    }),
+    ...mapState({
+      userInfo: state => state.login.userInfo
+    })
+  },
+  watch: {
+    $route({ query }) {
+      this.listData = []
+      this.topic = query.topic || ''
+      this.getShortHandList(query.page, query.topic)
     }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .publishWrap {
-    padding: 1.333rem 1.666rem 0;
-    background: #fff;
-    position: relative;
-    border-radius: 2px;
-    margin-bottom: 20px;
+  padding: 1.333rem 1.666rem 0;
+  background: #fff;
+  position: relative;
+  border-radius: 2px;
+  margin-bottom: 20px;
   .content {
     position: relative;
     border-radius: 2px;
-    border: 1px solid hsla(0,0%,59.2%,.2);
-    background-color: rgba(226,230,235,.2);
+    border: 1px solid hsla(0, 0%, 59.2%, 0.2);
+    background-color: rgba(226, 230, 235, 0.2);
     .textWrap {
       position: relative;
       .textCard {
@@ -264,17 +282,17 @@ export default {
             content: attr(placeholder);
             position: absolute;
             top: 8px;
-            color: rgba(23,24,26,.4);
+            color: rgba(23, 24, 26, 0.4);
             pointer-events: none;
             user-select: none;
             display: inline-block;
           }
           &.empty {
-             &:after {
+            &:after {
               display: none;
             }
           }
-          ::v-deep img{
+          ::v-deep img {
             max-width: 40px;
             max-height: 40px;
           }
@@ -297,9 +315,9 @@ export default {
           border-radius: 1.4px;
           border: 1px dashed #c5c5c5;
           background: #f8f8f9;
-          margin: 0 .666rem .666rem 0;
+          margin: 0 0.666rem 0.666rem 0;
           &:hover {
-            filter: brightness(.8);
+            filter: brightness(0.8);
           }
         }
         .CloseIcon {
@@ -308,16 +326,16 @@ export default {
           top: 5px;
           border-radius: 50%;
           border: 1px solid #c5c5c5;
-          background: rgba(0,0,0,.4);
+          background: rgba(0, 0, 0, 0.4);
           &:hover {
-            opacity: .8;
+            opacity: 0.8;
           }
         }
       }
-        .file-upload {
+      .file-upload {
         position: relative;
         overflow: hidden;
-        border: 1px solid #C5B7B7;
+        border: 1px solid #c5b7b7;
         display: inline-block;
         padding: 10px 10px;
         border-radius: 3px;
@@ -335,28 +353,28 @@ export default {
     .topic {
       padding: 0 12px 12px;
       .topicTitle {
-          font-size: 13px;
-          display: inline-block;
-          line-height: 22px;
-          height: 22px;
-          padding: 0 12px;
-          border: 1px solid #007fff;
-          border-radius: 14px;
-          text-align: center;
-          color: #007fff;
-          user-select: none;
+        font-size: 13px;
+        display: inline-block;
+        line-height: 22px;
+        height: 22px;
+        padding: 0 12px;
+        border: 1px solid #007fff;
+        border-radius: 14px;
+        text-align: center;
+        color: #007fff;
+        user-select: none;
       }
     }
   }
   .toolWrap {
     padding: 10px 0;
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     .tool {
-      display:flex;
+      display: flex;
       align-items: center;
       .TopicHandle {
-        position:relative;
+        position: relative;
         &:hover {
           .TopicSelect {
             display: block;
@@ -366,7 +384,7 @@ export default {
           display: none;
         }
         .TopicChoose {
-            color: #515a6e;
+          color: #515a6e;
         }
       }
     }
@@ -384,7 +402,10 @@ export default {
 .pageWrap {
   margin-top: 20px;
   text-align: center;
-  ::v-deep.ivu-page-prev, ::v-deep.ivu-page-next,  ::v-deep.ivu-page-item {
+  ::v-deep.ivu-page-prev,
+  ::v-deep.ivu-page-next,
+  ::v-deep.ivu-page-item {
+    font-weight: bold;
     background: rgba(0, 0, 0, 0);
   }
 }

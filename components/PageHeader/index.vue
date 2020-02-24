@@ -295,7 +295,7 @@ export default {
                     border: 1.5px solid #e2e6ea;
                     width: 80px;
                     border-radius: 10px;
-                    // font-weight: bold;
+                    font-weight: bold;
                     &:hover {
                         background-color: #e2e6ea;
                     }

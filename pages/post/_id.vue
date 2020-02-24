@@ -458,7 +458,7 @@ export default {
           .name {
             font-size: 15px;
             color: #333;
-            // font-weight: bold
+            font-weight: bold
           }
           .time {
             font-size: 13px;
@@ -477,7 +477,7 @@ export default {
             color: #333;
           }
           ::v-deep span {
-            // font-weight: normal;
+            font-weight: normal;
             font-family: 'Consolas' !important
           }
           ::v-deep h1 {
@@ -519,7 +519,7 @@ export default {
           text-align: center;
           color: #8a9aa9; 
           font-size: 18px;
-          // font-weight: 600;
+          font-weight: 600;
           text-align: center;
           padding: 1.67rem 0 5px;
         }

@@ -208,7 +208,7 @@ export default {
         font-size: 16px;
         color: black;
         line-height: 40px;
-        // font-weight: 600;
+        font-weight: 600;
       }
       .login-btn {
         float: right;
@@ -232,7 +232,7 @@ export default {
         width: 100px;
         padding: 10px 0;
         border-radius: 5px;
-        // font-weight: bold;
+        font-weight: bold;
         &:hover {
           background-color: #e2e6ea;
         }
@@ -247,7 +247,7 @@ export default {
   }
   .loading, .noCommentBox {
     text-align: center;
-    // font-weight: bold
+    font-weight: bold
 
   }
   .more {

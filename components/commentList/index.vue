@@ -295,7 +295,7 @@ export default {
             font-size: 16px;
             line-height: 1.2;
             white-space: nowrap;
-            // font-weight: 700;
+            font-weight: 700;
             margin-top: 5px;
           }
           .content {
@@ -314,7 +314,7 @@ export default {
           .reply {
             display: flex;
             margin: 5px 0 8px 0 ;
-            // font-weight: 400;
+            font-weight: 400;
             justify-content: space-between;
             align-items: center;
             .time {
@@ -414,7 +414,7 @@ export default {
                           font-size: 16px;
                           line-height: 1.2;
                           white-space: nowrap;
-                          // font-weight: 700;
+                          font-weight: 700;
                           margin-top: 5px;
                         }
                         .sub-user-content {
@@ -428,7 +428,7 @@ export default {
                             display: inline-block;
                             a {
                               color: #406599;
-                              // font-weight: 400;
+                              font-weight: 400;
                               font-size: 14px
                             }
                           }
