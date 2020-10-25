@@ -1,6 +1,13 @@
 <template>
   <div class="main">
-    <Row class="content">
+    <div class="content">
+      <h1 style="margin-top: 20px;">与世界分享知识</h1>
+      
+      <!-- <div class="footerWrap">
+         <PageFooter />
+      </div> -->
+    </div>
+    <!-- <Row class="content">
       <Col span="17" style="border-radis: 10px;">
         <Carousel
           loop
@@ -69,10 +76,7 @@
           </div>
         </div>
       </Col>
-    </Row>
-    <div class="footerWrap">
-      <PageFooter />
-    </div>
+    </Row> -->
     <Modal
       :visible="isShow"
       :mask="true"
@@ -113,15 +117,15 @@
 
 <script>
 import Modal from '../components/myModal'
-import myButton from '../components/Button'
-import PageFooter from '../components/footer/index'
-import ListItem from '../components/list/index'
+// // import myButton from '../components/Button'
+// import PageFooter from '../components/footer/index'
+// import ListItem from '../components/list/index'
 export default {
   layout: 'blog',
   components: {
-    ListItem,
-    PageFooter,
-    myButton,
+    // ListItem,
+    // PageFooter,
+    // myButton,
     Modal
   },
   data() {
@@ -146,8 +150,16 @@ export default {
 
 <style lang="less" scoped>
 .main {
+  text-align: center;
   max-width: 1200px;
   margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+  // .content {
+  //   justify-content: center;
+  // }
   .Banner {
     border-radius: 20px;
     img {
@@ -245,6 +257,7 @@ export default {
   }
 }
 .footerWrap {
+  bottom: 20px;
   background-color: #f6f7f8;
   text-align: center;
   width: 100%;
