@@ -98,6 +98,7 @@ export default {
   },
   async asyncData({ store, query }) {
     const categoryData = await store.dispatch('category/getCateGory')
+    console.log(categoryData, 'categoryData')
     const { data } = await store.dispatch('article/getArticle', {
       pageSize: 5,
       category: query.category,

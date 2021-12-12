@@ -33,19 +33,19 @@
             path="/codeshare"
             :changeCateGory="changeCateGory"
           />
-          <!-- <div class="createWrap" @click='create'>
-            <Icon type="md-create" />
+          <div class="createWrap" @click='create'>
+            <!-- <Icon type="md-create" /> -->
             <span>创建</span>
-          </div> -->
+          </div>
           <!-- <myButton to="/contribute" type='success'  class="create">创建</myButton> -->
-          <div class="btnWrap" @click="create">
+          <!-- <div class="btnWrap" @click="create">
             <div>
               <span class="btnText">分享</span>
               <span class="btnText">片段</span>
               <span class="btnText">分享</span>
               <span class="btnText">片段</span>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </contentLayout>
@@ -160,7 +160,10 @@ export default {
     position: relative;
   }
   .createWrap {
-    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
     position: relative;
     padding: 10px 20px;
     border-radius: 10px;

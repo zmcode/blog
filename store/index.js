@@ -6,7 +6,7 @@ export const actions = {
             const res = cookieParse.parse(cookie)
             store.commit('login/changeUserInfo', {
                 userInfo: JSON.parse(res.userinfo).userInfo
-            })
+            }) 
             store.commit('login/changeUserToken', {
                 token: res.token || ''
             })

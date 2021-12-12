@@ -1,6 +1,8 @@
-import myAxios from 'axios'
+import axios from 'axios'
 import login from '../store/login'
 
+const myAxios = axios.create({
+  })
 
 // 请求拦截
 myAxios.interceptors.request.use(
@@ -23,8 +25,9 @@ myAxios.interceptors.response.use(
     error => {
         // 没有token或者过期处理
         if (error.response && error.response.status === 401 || error.response.status === 404) {
-            // process.browser && (window.location.href = '/login')
+            process.browser && (window.location.href = '/login')
         }
+        return Promise.reject(error.response)
     }
 )
 
@@ -40,7 +43,7 @@ const httpServer = (opts, data) => {
         url: opts.url,
         timeout: 3000,
         // 配置不一样的baseURl,通过环境
-        baseURL: opts.baseURL || process.env.VUE_APP_API,
+        baseURL: process.browser ? process.env.VUE_APP_API : 'http://127.0.0.1:3000',
         headers: Object.assign(headers, opts.headers),
         withCredentials: true // 允许跨域发生cookie
         // headers: {Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZGNmOTgyMTRiNGFiNTBlNDAzOTA5MjIiLCJpYXQiOjE1NzQyNjcwNTQsImV4cCI6MTU3NDg3MTg1NH0.bLkaQbCyBb_OaXr__StsXD7rsWswcAW2CoFwvjLeR4U"}
@@ -53,10 +56,12 @@ const httpServer = (opts, data) => {
     } else {
         httpOptions.data = data
     }
+    console.log(httpOptions, 'httpOptions')
     // 封装
     const promise = new Promise((resolve, reject) => {
         myAxios(httpOptions)
             .then(req => {
+                console.log(req, 'req')
                 resolve(req.data)
             })
             .catch(error => {

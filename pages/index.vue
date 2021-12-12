@@ -1,82 +1,48 @@
 <template>
-  <div class="main">
-    <div class="content">
+  <div>
+    <div class="main">
+      <!-- <div class="content">
       <h1 style="margin-top: 20px;">与世界分享知识</h1>
       
-      <!-- <div class="footerWrap">
+      <div class="footerWrap">
          <PageFooter />
-      </div> -->
-    </div>
-    <!-- <Row class="content">
-      <Col span="17" style="border-radis: 10px;">
-        <Carousel
-          loop
-          :height="300"
-          class="Banner"
-          easing="linear"
-          dots="none"
-          autoplay
-        >
-          <CarouselItem class="CarouselItem">
-            <a href="/">
-              <img src="~/assets/img/banner.png" alt="" />
-            </a>
-          </CarouselItem>
-          <CarouselItem>
-            <a href="/">
-              <img src="~/assets/img/banner2.png" alt="" />
-            </a>
-          </CarouselItem>
-        </Carousel>
-
-        <div class="ArticleWrap">
-          <ListItem />
-        </div>
-      </Col>
-      <Col span="6" offset="1">
+      </div>
+    </div> -->
+      <Row class="content">
         <div class="LeftInfoWrap">
           <div class="MostUsersWrap">
             <div class="MostUsersHead">
-              <img src="" alt="" />
+              <img
+                src="https://avatars.githubusercontent.com/u/48686959?v=4"
+                alt=""
+              />
               <div class="Winner"></div>
             </div>
-            <div class="MostUsersInfo">
-              <h3>敬请期待</h3>
-              <p>???</p>
-            </div>
-            <div class="MostUsersData">
-              <div class="DataInfo">
-                <h4>文章</h4>
-                <span>???</span>
-              </div>
-              <div class="DataInfo">
-                <h4>获赞</h4>
-                <span>???</span>
-              </div>
-            </div>
             <div class="GoodList">
-              <nuxt-link to=""
-                >完整榜单<Icon
-                  type="ios-arrow-forward"
-                  size="17"
-                  style="margin-top: -4px"
-              /></nuxt-link>
+              <a href="https://github.com/yaojin2070" target="_blank">github</a>
+              <a href="https://juejin.cn/user/2365804755288878" target="_blank"
+                >掘金</a
+              >
             </div>
           </div>
           <div class="BlogIntr">
             <h3>其他</h3>
             <myButton @click="showHistoy">创站记录</myButton>
-            <h3>友链</h3>
-            <p>
-              <a href="https://uizph.com/">小辉哥</a>
-            </p>
-            <p>
-              <a href="https://www.microanswer.cn/">Microanswer</a>
-            </p>
           </div>
         </div>
-      </Col>
-    </Row> -->
+        <div class="ArticleWrap">
+          hi, 谢谢你来看我, 这里是我的个人博客,
+          从19年开始这里记录我的文章以及笔记, 我想记录一个成长的过程,
+          如果你感兴趣可以注册账号, 分享你的东西, 它会展示到我的博客上,
+          博客会一直在线持续到我的职业生涯结束!
+          <!-- <ListItem /> -->
+        </div>
+      </Row>
+      <div class="footerWrap">
+        <PageFooter />
+      </div>
+    </div>
+
     <Modal
       :visible="isShow"
       :mask="true"
@@ -117,26 +83,26 @@
 
 <script>
 import Modal from '../components/myModal'
-// // import myButton from '../components/Button'
-// import PageFooter from '../components/footer/index'
+import myButton from '../components/Button'
+import PageFooter from '../components/footer/index'
 // import ListItem from '../components/list/index'
 export default {
   layout: 'blog',
   components: {
     // ListItem,
-    // PageFooter,
-    // myButton,
-    Modal
+    PageFooter,
+    myButton,
+    Modal,
   },
   data() {
     return {
-      isShow: false
+      isShow: false,
     }
   },
   methods: {
     showHistoy() {
       this.isShow = true
-    }
+    },
   },
   mounted() {
     console.log(
@@ -144,7 +110,7 @@ export default {
       'color: #fadfa3; background: #030307; padding:5px;',
       'background: #fadfa3; padding:5px 0;'
     )
-  }
+  },
 }
 </script>
 
@@ -153,37 +119,40 @@ export default {
   text-align: center;
   max-width: 1200px;
   margin: auto;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   height: calc(100vh - 80px);
-  // .content {
-  //   justify-content: center;
-  // }
-  .Banner {
-    border-radius: 20px;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    ::v-deep.ivu-carousel-list {
-      border-radius: 10px;
-    }
-  }
+
   .content {
-    padding: 30px 20px;
+    // padding: 30px 20px;
+    // justify-content: center;
+    display: flex;
+    width: 95%;
+    margin-top: 80px;
+    flex: 1;
+    padding: 0 20px;
+    /deep/ .ivu-col-offset-1 {
+      margin: 0;
+    }
     .ArticleWrap {
-      box-shadow: 0 1px 3px 0 rgba(4, 5, 13, 0.23);
-      border-radius: 5px;
-      //  padding: 5px 0 0 0;
-      margin-top: 30px;
+      width: 75%;
+      text-align: left;
+      font-size: 24px;
+      // padding: 0 100px;
+      // box-shadow: 0 1px 3px 0 rgba(4, 5, 13, 0.23);
+      padding: 25px 100px;
+      // margin-top: 30px;
       background-color: #fff;
     }
     .LeftInfoWrap {
+      height: 100%;
       //  height: 800px;
-      width: 80%;
-      border-radius: 8px;
+      width: 25%;
+      // border-radius: 8px;
       padding: 25px 0;
       background-color: #fff;
       .MostUsersWrap {
@@ -234,7 +203,7 @@ export default {
           }
         }
         .GoodList {
-          padding: 8px 0;
+          padding-bottom: 8px;
           text-align: center;
           margin-top: 10px;
           border-top: 1.5px solid#e2e6ea;
@@ -243,6 +212,8 @@ export default {
           a {
             color: black;
             font-weight: bold;
+            margin-top: 10px;
+            display: block;
             &:hover {
               color: red;
             }
