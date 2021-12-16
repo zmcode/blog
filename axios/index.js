@@ -56,12 +56,10 @@ const httpServer = (opts, data) => {
     } else {
         httpOptions.data = data
     }
-    console.log(httpOptions, 'httpOptions')
     // 封装
     const promise = new Promise((resolve, reject) => {
         myAxios(httpOptions)
             .then(req => {
-                console.log(req, 'req')
                 resolve(req.data)
             })
             .catch(error => {

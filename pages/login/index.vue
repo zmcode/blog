@@ -11,8 +11,8 @@
             :class="{ isShow: WelcomeVisible }"
           >
             <div class="card-body">
-              <h1 class="card-title">遥近</h1>
-              <p class="card-message">不一样博客平台</p>
+              <h1 class="card-title">个人博客</h1>
+              <!-- <p class="card-message">不一样博客平台</p> -->
               <div class="btn-wrap">
                 <a
                   class="btn btnRegiste js-btn"

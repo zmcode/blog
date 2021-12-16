@@ -1,17 +1,23 @@
 <template>
   <div class="pinListView">
     <ul class="pinList">
-      <li class="Item" v-for="(item ,index) in source" :key="index">
+      <li class="Item" v-for="(item, index) in source" :key="index">
         <div class="pin">
           <div class="pinHeader">
             <div class="userInfo">
               <div class="userPopover">
                 <nuxt-link :to="`/home/${item.user_info.id}`">
-                  <img :src="!item.user_info.avatar ? `${baseUrl}/default-avatar.e30559a.svg` : item.user_info.avatar">
+                  <img
+                    :src="
+                      !item.user_info.avatar
+                        ? `${baseUrl}/default-avatar.e30559a.svg`
+                        : item.user_info.avatar
+                    "
+                  />
                 </nuxt-link>
               </div>
               <div class="headerContent">
-                <p>{{item.user_info.name}}</p>
+                <p>{{ item.user_info.name }}</p>
                 <p>{{ item.created | dateFormat }}</p>
               </div>
             </div>
@@ -29,7 +35,7 @@
             </div> -->
             <shortHandleBox
               :LoginUserId="LoginUserId"
-              :item="JSON.parse(JSON.stringify(item)) "
+              :item="JSON.parse(JSON.stringify(item))"
               :changeEditVis="changeEditVis"
               :changeItemData="changeItemData"
               :getShortHandList="getShortHandList"
@@ -41,13 +47,18 @@
           </div>
 
           <div class="pinImg">
-            <Viewer :images="item.imgData">
-              <img v-for="item in item.imgData" :src="item" :key="item.index" height="100">
-            </Viewer>
+            <viewer :images="item.imgData">
+              <img
+                v-for="(url, index) in item.imgData"
+                :src="url"
+                :key="index"
+                height="150"
+              />
+            </viewer>
           </div>
 
           <div class="pinTopic">
-            <span class="pinTopicTitle">{{item.topic}}</span>
+            <span class="pinTopicTitle">{{ item.topic }}</span>
             <!-- <nuxt-link to='/login' class="detail-btn">
               编辑
             </nuxt-link> -->
@@ -55,12 +66,12 @@
         </div>
       </li>
     </ul>
-  </div>  
+  </div>
 </template>
 <script>
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer/src/component.vue'
+
 import shortHandleBox from '../../components/shortHandleBox'
+
 export default {
   props: {
     source: {
@@ -68,14 +79,13 @@ export default {
     },
     LoginUserId: [String],
     changeEditVis: [Function],
-    changeItemData:[Function],
-    getShortHandList: [Function]
+    changeItemData: [Function],
+    getShortHandList: [Function],
   },
   components: {
-    Viewer,
-    shortHandleBox
+    shortHandleBox,
   },
-  data () {
+  data() {
     return {
       showHandleBox: false,
       baseUrl: process.env.VUE_APP_IMG,
@@ -114,8 +124,8 @@ export default {
     .pin {
       background-color: #fff;
       border-radius: 5px;
-      box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
-      padding:20px;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      padding: 20px;
       .pinHeader {
         display: flex;
         align-items: center;
@@ -130,29 +140,29 @@ export default {
             cursor: pointer;
           }
           .dropDownBox {
-              position: absolute;
-              /* margin-top: 6px; */
-              z-index: 1;
-              left: -21px;
-              margin-top: -6px;
+            position: absolute;
+            /* margin-top: 6px; */
+            z-index: 1;
+            left: -21px;
+            margin-top: -6px;
             .dropDownCaret {
-                position: absolute;
-                top: -12px;
-                left: 28px;
+              position: absolute;
+              top: -12px;
+              left: 28px;
+              width: 0;
+              height: 0;
+              border: 6px solid transparent;
+              border-bottom-color: #ebebeb;
+              &:after {
+                content: '';
+                top: -5px;
+                left: -6px;
+                border-bottom-color: #fff;
                 width: 0;
                 height: 0;
                 border: 6px solid transparent;
-                border-bottom-color: #ebebeb;
-                &:after {
-                  content: "";
-                  top: -5px;
-                  left: -6px;
-                  border-bottom-color: #fff;
-                  width: 0;
-                  height: 0;
-                  border: 6px solid transparent;
-                  position: absolute
-                }
+                position: absolute;
+              }
             }
             .dropDownMenu {
               display: block;
@@ -160,7 +170,7 @@ export default {
               border-radius: 3px;
               background-color: #fff;
               border: 1px solid #ebebeb;
-              box-shadow: 0 3px 12px 0 rgba(0,0,0,.06);
+              box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.06);
               .dropDownMenu-item {
                 padding: 6px 20px;
                 display: block;
@@ -190,44 +200,43 @@ export default {
         }
       }
       .pinContent {
-          margin: 10px 0 10px 40px;
-          color: black;
-          .content {
-            white-space: pre-wrap;
-          }
-          ::v-deep img {
-            max-width: 40px;
-          }
-
+        margin: 10px 0 10px 40px;
+        color: black;
+        .content {
+          white-space: pre-wrap;
+        }
+        ::v-deep img {
+          max-width: 40px;
+        }
       }
       .pinImg {
-         margin: 10px 0 10px 40px;
-         img {
-            margin-left: 4px;
-            max-width: 100%;
-         }
+        margin: 10px 0 10px 40px;
+        img {
+          margin-left: 4px;
+          max-width: 100%;
+        }
       }
       .pinTopic {
-          margin: 10px 0 10px 40px;
-         .pinTopicTitle {
-            font-size: 13px;
-            display: inline-block;
-            line-height: 22px;
-            height: 22px;
-            padding: 0 12px;
-            border: 1px solid #666;
-            border-radius: 14px;
-            text-align: center;
-            color: #666;
-            user-select: none;
-         }
-         .detail-btn {
-           font-size:12px;
+        margin: 10px 0 10px 40px;
+        .pinTopicTitle {
+          font-size: 13px;
+          display: inline-block;
+          line-height: 22px;
+          height: 22px;
+          padding: 0 12px;
+          border: 1px solid #666;
+          border-radius: 14px;
+          text-align: center;
+          color: #666;
+          user-select: none;
+        }
+        .detail-btn {
+          font-size: 12px;
           //  color: #666;
-           &:hover {
-             opacity: 0.8;
-           }
-         }
+          &:hover {
+            opacity: 0.8;
+          }
+        }
       }
     }
   }

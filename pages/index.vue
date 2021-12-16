@@ -20,9 +20,6 @@
             </div>
             <div class="GoodList">
               <a href="https://github.com/yaojin2070" target="_blank">github</a>
-              <a href="https://juejin.cn/user/2365804755288878" target="_blank"
-                >掘金</a
-              >
             </div>
           </div>
           <div class="BlogIntr">
@@ -31,11 +28,7 @@
           </div>
         </div>
         <div class="ArticleWrap">
-          hi, 谢谢你来看我, 这里是我的个人博客,
-          从19年开始这里记录我的文章以及笔记, 我想记录一个成长的过程,
-          如果你感兴趣可以注册账号, 分享你的东西, 它会展示到我的博客上,
-          博客会一直在线持续到我的职业生涯结束!
-          <!-- <ListItem /> -->
+          这是我的个人博客, 记录文章和笔记
         </div>
       </Row>
       <div class="footerWrap">
@@ -106,7 +99,7 @@ export default {
   },
   mounted() {
     console.log(
-      '\n%c遥近博客%c  2020-02-16 \n',
+      '\n%c 56083838594 + 22688782  %c  yjdzm.com注册时间 - 个位数 \n',
       'color: #fadfa3; background: #030307; padding:5px;',
       'background: #fadfa3; padding:5px 0;'
     )
@@ -130,6 +123,8 @@ export default {
   .content {
     // padding: 30px 20px;
     // justify-content: center;
+    border-radius: 20px;
+    background: #fff;
     display: flex;
     width: 95%;
     margin-top: 80px;
@@ -146,7 +141,6 @@ export default {
       // box-shadow: 0 1px 3px 0 rgba(4, 5, 13, 0.23);
       padding: 25px 100px;
       // margin-top: 30px;
-      background-color: #fff;
     }
     .LeftInfoWrap {
       height: 100%;
@@ -154,7 +148,7 @@ export default {
       width: 25%;
       // border-radius: 8px;
       padding: 25px 0;
-      background-color: #fff;
+
       .MostUsersWrap {
         padding: 15px;
         position: relative;
